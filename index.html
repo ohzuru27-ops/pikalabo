@@ -1068,7 +1068,7 @@
     </div>
     <div class="field-group">
       <label>駐車場 <span class="required">必須</span></label>
-      <div class="hint" style="margin-bottom:8px;">作業車の駐車についてお教えください</div>
+      <div class="hint" style="margin-bottom:8px;">作業者の駐車についてお教えください<br>駐車場のご用意がない場合は、駐車場代のご負担をお願いしております</div>
       <div class="radio-group">
         <div class="radio-btn" onclick="selectRadio('parking', 'あり（無料）', this)">あり（無料）</div>
         <div class="radio-btn" onclick="selectRadio('parking', 'あり（有料）', this)">あり（有料）</div>
@@ -1316,6 +1316,39 @@ const airconTypes = [
   { id: 'ac_ceiling',  name: '天井埋め込み',           price: '¥18,000〜', priceNum: 18000 },
   { id: 'ac_biz',      name: '業務用エアコン4方向',   price: '¥25,000〜', priceNum: 25000 },
 ];
+
+// エアコン台数管理
+if (!state.airconCounts) state.airconCounts = {};
+
+function changeAirconCount(id, delta, e) {
+  e.stopPropagation();
+  if (!state.airconCounts) state.airconCounts = {};
+  const current = state.airconCounts[id] || 0;
+  const newCount = Math.max(0, current + delta);
+  state.airconCounts[id] = newCount;
+
+  // airconTypesByMenuを台数に応じて更新
+  if (!state.airconTypesByMenu) state.airconTypesByMenu = [];
+  // このIDを削除してから台数分追加
+  state.airconTypesByMenu = state.airconTypesByMenu.filter(x => x !== id);
+  for (let i = 0; i < newCount; i++) state.airconTypesByMenu.push(id);
+
+  // UI更新
+  const countEl = document.getElementById(`count_${id}`);
+  const item = document.getElementById(`atype_${id}`);
+  const chk  = document.getElementById(`achk_${id}`);
+  if (countEl) countEl.textContent = newCount;
+  if (item) {
+    item.classList.toggle('selected', newCount > 0);
+    chk.classList.toggle('selected', newCount > 0);
+    chk.textContent = newCount > 0 ? '✓' : '';
+  }
+
+  const errEl = document.getElementById('airconTypeError');
+  if (errEl && state.airconTypesByMenu.length > 0) errEl.classList.remove('show');
+  state.airconTypeByMenu['aircon'] = state.airconTypesByMenu[0] || null;
+  calcEstimate();
+}
 
 // =========================================
 // Unavailable dates (YYYY-MM-DD) ← ここで予約不可日を設定
@@ -1573,12 +1606,12 @@ function calcEstimate() {
       lines.push({ label: '風呂釜洗浄 基本料金', price: furoBasePrice });
       total += furoBasePrice;
     } else if (m === 'aircon') {
-      const types = state.airconTypesByMenu || [];
-      types.forEach(tid => {
-        const t = airconTypes.find(t => t.id === tid);
-        if (t) {
-          lines.push({ label: `エアコン（${t.name}）`, price: t.priceNum });
-          total += t.priceNum;
+      const counts = state.airconCounts || {};
+      airconTypes.forEach(t => {
+        const cnt = counts[t.id] || 0;
+        if (cnt > 0) {
+          lines.push({ label: `エアコン（${t.name}）× ${cnt}台`, price: t.priceNum * cnt });
+          total += t.priceNum * cnt;
         }
       });
     }
@@ -1659,24 +1692,29 @@ function renderOptions() {
   let html = '';
 
   if (currentMenu === 'aircon') {
-    const selectedAirconTypes = state.airconTypesByMenu || [];
+    if (!state.airconCounts) state.airconCounts = {};
     html += `
       <div style="margin-bottom:16px;">
-        <div class="sub-label" style="margin-bottom:10px;">エアコンの種類を選択してください <span style="color:var(--error);font-size:11px;">必須・複数選択可</span></div>
+        <div class="sub-label" style="margin-bottom:10px;">エアコンの種類と台数を選択してください <span style="color:var(--error);font-size:11px;">必須</span></div>
         <div style="display:flex;flex-direction:column;gap:8px;" id="airconTypeGrid">
           ${airconTypes.map(t => {
-            const isSelected = selectedAirconTypes.includes(t.id);
+            const count = state.airconCounts[t.id] || 0;
             return `
-            <div class="option-item${isSelected ? ' selected' : ''}" id="atype_${t.id}" onclick="toggleAirconType('${t.id}')">
-              <div class="option-checkbox${isSelected ? ' selected' : ''}" id="achk_${t.id}">${isSelected ? '✓' : ''}</div>
+            <div class="option-item${count > 0 ? ' selected' : ''}" id="atype_${t.id}" style="align-items:center;">
+              <div class="option-checkbox${count > 0 ? ' selected' : ''}" id="achk_${t.id}">${count > 0 ? '✓' : ''}</div>
               <div class="option-info" style="flex:1;">
                 <div class="option-name" style="font-size:13px;">${t.name}</div>
+                <div style="font-size:11px;color:var(--sky-dark);font-weight:600;">${t.price}</div>
               </div>
-              <div class="option-price" style="white-space:nowrap;">${t.price}</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                <button onclick="changeAirconCount('${t.id}',-1,event)" style="width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--mid);">−</button>
+                <span id="count_${t.id}" style="font-size:16px;font-weight:700;color:var(--dark);min-width:20px;text-align:center;">${count}</span>
+                <button onclick="changeAirconCount('${t.id}',1,event)" style="width:28px;height:28px;border-radius:50%;border:1.5px solid var(--sky);background:var(--sky-light);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sky-dark);">＋</button>
+              </div>
             </div>
           `}).join('')}
         </div>
-        <div class="error-msg" id="airconTypeError">エアコンの種類を1つ以上選択してください</div>
+        <div class="error-msg" id="airconTypeError">エアコンの種類を1台以上選択してください</div>
       </div>
       <div class="divider"></div>
       <div class="sub-label" style="margin-bottom:10px;">追加オプション（任意）</div>
@@ -1873,7 +1911,6 @@ function goStep3() {
   goStep(3);
   initCalendar();
 }
-
 function goStep4() {
   if (state.dates.length < 3) { document.getElementById('dateError').classList.add('show'); return; }
   goStep(4);
@@ -1913,8 +1950,9 @@ function renderConfirm() {
       const maker = makerSels[id];
       return maker ? `${o.name}（${maker.label}・${maker.price}）` : `${o.name}（${o.price}）`;
     }).filter(Boolean);
-    const airconTypeNames = m === 'aircon' && state.airconTypesByMenu?.length
-      ? state.airconTypesByMenu.map(id => airconTypes.find(t => t.id === id)?.name).filter(Boolean).join('・')
+    const airconTypeNames = m === 'aircon' && state.airconCounts
+      ? airconTypes.filter(t => (state.airconCounts[t.id] || 0) > 0)
+          .map(t => `${t.name}×${state.airconCounts[t.id]}台`).join('・')
       : null;
     const washerType = m === 'washer' ? state.washerTypeByMenu['washer'] : null;
     const subType = washerType ? `（${washerType}）` : (airconTypeNames ? `（${airconTypeNames}）` : '');
@@ -1962,8 +2000,9 @@ async function submitToLine(e) {
         const maker = makerSels[id];
         return maker ? `${o.name}（${maker.label}）` : o.name;
       }).filter(Boolean);
-      const airconTypeNames = m === 'aircon' && state.airconTypesByMenu?.length
-        ? state.airconTypesByMenu.map(id => airconTypes.find(t => t.id === id)?.name).filter(Boolean).join('・')
+      const airconTypeNames = m === 'aircon' && state.airconCounts
+        ? airconTypes.filter(t => (state.airconCounts[t.id] || 0) > 0)
+            .map(t => `${t.name}×${state.airconCounts[t.id]}台`).join('・')
         : null;
       const washerType = m === 'washer' ? state.washerTypeByMenu['washer'] : null;
       const subType = washerType ? `（${washerType}）` : (airconTypeNames ? `（${airconTypeNames}）` : '');
