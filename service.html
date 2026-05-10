@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>清掃範囲・サービス内容 | ピカラボ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #5BB8D4; --sky-light: #EBF7FB; --sky-dark: #3A9AB8;
+    --accent: #F4A428; --dark: #1C2B35; --mid: #4A6572;
+    --light: #8FA8B4; --bg: #F5FAFB; --border: #D0E8EF; --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); }
+  .header {
+    background: white; border-bottom: 2px solid var(--sky-light);
+    padding: 16px 24px; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(91,184,212,0.08);
+  }
+  .logo { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 600; color: var(--sky-dark); }
+  .logo span { color: var(--accent); }
+  .main { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+  .section { background: white; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 4px 24px rgba(91,184,212,0.08); margin-bottom: 20px; overflow: hidden; }
+  .section-header {
+    background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    padding: 18px 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-icon { font-size: 24px; }
+  .section-title { color: white; font-size: 17px; font-weight: 700; }
+  .section-title small { display: block; font-size: 12px; font-weight: 400; opacity: 0.85; margin-top: 2px; }
+  .section-body { padding: 20px; }
+  .range-title {
+    font-size: 13px; font-weight: 700; color: var(--sky-dark);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+  }
+  .range-title::before { content: '▶'; font-size: 9px; }
+  .range-list { list-style: none; margin-bottom: 16px; }
+  .range-list li {
+    font-size: 13px; color: var(--mid); padding: 6px 0;
+    border-bottom: 1px solid var(--bg); display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.6;
+  }
+  .range-list li::before { content: '✓'; color: var(--sky); font-weight: 700; flex-shrink: 0; }
+  .option-card {
+    background: var(--sky-light); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+  }
+  .option-card-name {
+    font-size: 14px; font-weight: 700; color: var(--dark);
+    margin-bottom: 6px; display: flex; justify-content: space-between;
+  }
+  .option-card-price { color: var(--sky-dark); }
+  .option-card-desc { font-size: 12px; color: var(--mid); line-height: 1.7; }
+  .option-card-effect {
+    margin-top: 8px; padding: 8px 10px;
+    background: white; border-radius: 6px; border-left: 3px solid var(--sky);
+    font-size: 12px; color: var(--dark);
+  }
+  .option-card-effect::before { content: '💡 効果：'; font-weight: 700; color: var(--sky-dark); }
+  .special-card {
+    background: #FAF8FF; border: 1.5px solid #B8A0FF;
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+  }
+  .special-card .option-card-name { color: #5B3FCC; }
+  .special-card .option-card-price { color: #7B61FF; }
+  .special-card .option-card-effect { border-left-color: #7B61FF; }
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .note { font-size: 12px; color: var(--light); padding: 12px; background: var(--bg); border-radius: 8px; margin-top: 12px; line-height: 1.8; }
+  .btn-reserve {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    color: white; border: none; border-radius: 10px; padding: 16px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; text-align: center; text-decoration: none;
+    box-shadow: 0 4px 16px rgba(91,184,212,0.35); margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">ピカ<span>ラボ</span></div>
+</div>
+
+<div class="main">
+
+  <!-- 洗濯機 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🫧</div>
+      <div class="section-title">洗濯機 分解清掃<small>基本の清掃範囲とオプション</small></div>
+    </div>
+    <div class="section-body">
+      <div class="range-title">基本清掃の範囲</div>
+      <ul class="range-list">
+        <li>洗濯槽の分解・徹底洗浄（カビ・水垢・洗剤カス除去）</li>
+        <li>パルセーター（羽根）の取り外し洗浄</li>
+        <li>糸くずフィルターの清掃</li>
+        <li>排水フィルター・ポンプ周りの清掃</li>
+        <li>洗剤投入口・ケースの洗浄</li>
+        <li>外側パネルの清掃・拭き上げ</li>
+        <li>作業後の動作確認（試運転）</li>
+      </ul>
+
+      <div class="divider"></div>
+      <div class="range-title">オプションで追加できる清掃</div>
+
+      <div class="option-card">
+        <div class="option-card-name">乾燥機能付き清掃 <span class="option-card-price">+¥5,000</span></div>
+        <div class="option-card-desc">乾燥フィルター・乾燥経路の清掃。縦型乾燥機能付き洗濯機が対象です。</div>
+        <div class="option-card-effect">乾燥時間の短縮・乾燥効率の改善</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">洗濯槽抜き洗浄 <span class="option-card-price">+¥10,000〜</span></div>
+        <div class="option-card-desc">洗濯槽を完全に取り出して裏側まで徹底洗浄。ドラム式対象。Panasonicのみ+¥13,000。</div>
+        <div class="option-card-effect">カビ臭・黒カビの根本除去</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">乾燥機洗浄 <span class="option-card-price">+¥5,000〜</span></div>
+        <div class="option-card-desc">ドラム式の乾燥フィルター・乾燥経路の分解清掃。機種により料金が異なります。</div>
+        <div class="option-card-effect">乾燥時間が遅い・乾きが悪いを改善</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">洗濯パン・排水口清掃 <span class="option-card-price">+¥4,000〜</span></div>
+        <div class="option-card-desc">洗濯機の下にある防水パンと排水口の分解清掃。移動ありの場合+¥8,000。</div>
+        <div class="option-card-effect">排水口の詰まり防止・ニオイ解消</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">ヒートポンプ交換【Panasonic限定】 <span class="option-card-price">+¥38,500</span></div>
+        <div class="option-card-desc">乾燥性能を左右するヒートポンプユニットの交換。Panasonic機種のみ対応。</div>
+        <div class="option-card-effect">乾燥機能を完全に回復・改善</div>
+      </div>
+
+      <div class="special-card">
+        <div class="option-card-name">⭐ 乾燥力改善コース <span class="option-card-price">¥22,000</span></div>
+        <div class="option-card-desc">乾燥だけお悩みの方へ。乾燥機・乾燥経路に関わる箇所のみ分解清掃。本体分解なしでコストを抑えながら乾燥力を回復します。このコースを選ぶとドラム型の基本料金が¥30,000→¥22,000になります。</div>
+        <div class="option-card-effect">乾燥時間が遅い・乾きが悪いを改善（本体フル分解なし）</div>
+      </div>
+
+      <div class="note">
+        ⏱ 作業時間：縦型 2.5〜3.5時間 / ドラム式 3〜5時間<br>
+        対応メーカー（ドラム式）：Panasonic・HITACHI・SHARP・TOSHIBA
+      </div>
+    </div>
+  </div>
+
+  <!-- 風呂釜 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🛁</div>
+      <div class="section-title">風呂釜洗浄<small>基本の清掃範囲とオプション</small></div>
+    </div>
+    <div class="section-body">
+      <div class="range-title">基本清掃の範囲</div>
+      <ul class="range-list">
+        <li>風呂釜（追い焚き配管）の高圧洗浄</li>
+        <li>循環口フィルターの清掃</li>
+        <li>浴槽内の汚れ除去・拭き上げ</li>
+        <li>洗浄後の動作確認</li>
+      </ul>
+      <div class="note" style="margin-bottom:16px;">※ 1つ穴タイプのみ対応しております</div>
+
+      <div class="divider"></div>
+      <div class="range-title">オプションで追加できる清掃</div>
+
+      <div class="option-card">
+        <div class="option-card-name">プレミアム除菌・消臭薬追加 <span class="option-card-price">+¥4,000</span></div>
+        <div class="option-card-desc">通常の洗浄薬に加え、強力な除菌・消臭薬を追加投入します。</div>
+        <div class="option-card-effect">雑菌・レジオネラ菌の除去・ニオイ解消</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">エプロン内高圧洗浄 <span class="option-card-price">+¥7,000</span></div>
+        <div class="option-card-desc">浴槽の側面パネル（エプロン）を外して内部を高圧洗浄します。</div>
+        <div class="option-card-effect">普段掃除できないカビ・汚れの完全除去</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">排水口清掃 <span class="option-card-price">+¥1,500</span></div>
+        <div class="option-card-desc">浴室の排水口を分解して内部まで清掃します。</div>
+        <div class="option-card-effect">排水詰まり防止・ヌメリ除去</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">浴室鏡ウロコ取り <span class="option-card-price">+¥5,000〜</span></div>
+        <div class="option-card-desc">水垢・石鹸カスが固着した鏡の白いウロコを専用薬剤で除去します。大きさにより料金が異なります。</div>
+        <div class="option-card-effect">鏡が見えにくい・曇りがひどいを改善</div>
+      </div>
+
+      <div class="note">⏱ 作業時間：約1.5時間</div>
+    </div>
+  </div>
+
+  <!-- エアコン -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">❄️</div>
+      <div class="section-title">エアコン 分解清掃<small>基本の清掃範囲とオプション</small></div>
+    </div>
+    <div class="section-body">
+      <div class="range-title">基本清掃の範囲</div>
+      <ul class="range-list">
+        <li>フィルターの取り外し・高圧洗浄</li>
+        <li>フィン（熱交換器）の高圧洗浄</li>
+        <li>ファン（送風羽根）の分解・洗浄</li>
+        <li>ドレンパン（水受け皿）の清掃</li>
+        <li>ルーバー（風向き板）の取り外し洗浄</li>
+        <li>外装パネルの拭き上げ</li>
+        <li>作業後の動作確認（試運転・冷暖房チェック）</li>
+      </ul>
+
+      <div class="divider"></div>
+      <div class="range-title">オプションで追加できる清掃</div>
+
+      <div class="option-card">
+        <div class="option-card-name">防カビ抗菌コートスプレー <span class="option-card-price">+¥3,000</span></div>
+        <div class="option-card-desc">洗浄後のフィン・ファンに防カビ抗菌コートを塗布します。</div>
+        <div class="option-card-effect">カビ・菌の再発生を長期間抑制</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-card-name">室外機洗浄 <span class="option-card-price">+¥4,000</span></div>
+        <div class="option-card-desc">室外機のフィン（放熱板）を高圧洗浄します。</div>
+        <div class="option-card-effect">冷暖房効率の改善・電気代の節約</div>
+      </div>
+
+      <div class="note">⏱ 作業時間：1台あたり1.5〜3時間（複数台の場合はご相談）</div>
+    </div>
+  </div>
+
+  <a href="index.html" class="btn-reserve">📅 予約はこちら</a>
+
+</div>
+</body>
+</html>

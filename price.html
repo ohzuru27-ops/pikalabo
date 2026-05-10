@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>料金表 | ピカラボ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --sky:#5BB8D4;--sky-light:#EBF7FB;--sky-dark:#3A9AB8;--accent:#F4A428;--dark:#1C2B35;--mid:#4A6572;--light:#8FA8B4;--bg:#F5FAFB;--border:#D0E8EF;--radius:12px; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);}
+  .header{background:white;border-bottom:2px solid var(--sky-light);padding:16px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(91,184,212,0.08);}
+  .logo{font-family:'Shippori Mincho',serif;font-size:22px;font-weight:600;color:var(--sky-dark);}
+  .logo span{color:var(--accent);}
+  .main{max-width:640px;margin:0 auto;padding:24px 16px 80px;}
+  .section{background:white;border-radius:var(--radius);border:1px solid var(--border);box-shadow:0 4px 24px rgba(91,184,212,0.08);margin-bottom:20px;overflow:hidden;}
+  .section-header{background:linear-gradient(135deg,var(--sky),var(--sky-dark));padding:18px 20px;display:flex;align-items:center;gap:12px;}
+  .section-icon{font-size:24px;}
+  .section-title{color:white;font-size:17px;font-weight:700;}
+  .section-title small{display:block;font-size:12px;font-weight:400;opacity:0.85;margin-top:2px;}
+  .section-body{padding:20px;}
+  .maker-card{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .maker-header{background:var(--sky-light);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+  .maker-name{font-size:14px;font-weight:700;color:var(--sky-dark);}
+  .maker-price{font-size:15px;font-weight:700;color:var(--dark);}
+  .maker-body{padding:10px 14px;}
+  .maker-row{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--mid);padding:3px 0;line-height:1.5;}
+  .ok{color:var(--sky-dark);font-weight:700;flex-shrink:0;}
+  .ng{color:#E05C5C;flex-shrink:0;}
+  .divider{height:1px;background:var(--border);margin:16px 0;}
+  .category-label{font-size:11px;font-weight:700;color:var(--sky-dark);background:var(--sky-light);padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+  .option-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0 10px 12px;border-bottom:1px solid var(--bg);gap:12px;}
+  .option-row:last-child{border-bottom:none;}
+  .option-name{font-size:13px;color:var(--mid);flex:1;line-height:1.6;}
+  .option-name small{display:block;font-size:11px;color:var(--light);margin-top:1px;}
+  .option-price{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;}
+  .special-option{background:#FAF8FF;border:1px solid #B8A0FF;border-radius:10px;padding:12px 14px;margin:8px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .special-option .option-name{color:#5B3FCC;font-weight:600;}
+  .special-option .option-price{color:#7B61FF;}
+  .warning-box{background:#FFF8E8;border:1px solid #F4D88A;border-left:3px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:12px;color:#8B6200;line-height:1.7;margin-top:12px;}
+  .note{font-size:12px;color:var(--light);padding:12px;background:var(--bg);border-radius:8px;margin-top:12px;line-height:1.8;}
+  .price-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);gap:12px;}
+  .price-row:last-child{border-bottom:none;}
+  .price-name{font-size:14px;color:var(--dark);font-weight:500;flex:1;}
+  .price-val{font-size:15px;font-weight:700;color:var(--sky-dark);white-space:nowrap;}
+  .btn-reserve{display:block;width:100%;background:linear-gradient(135deg,var(--sky),var(--sky-dark));color:white;border:none;border-radius:10px;padding:16px;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;box-shadow:0 4px 16px rgba(91,184,212,0.35);margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="header"><div class="logo">ピカ<span>ラボ</span></div></div>
+<div class="main">
+
+  <div class="section">
+    <div class="section-header"><div class="section-icon">🫧</div><div class="section-title">ドラム式洗濯機 分解清掃<small>メーカー別基本料金・内容</small></div></div>
+    <div class="section-body">
+      <div class="maker-card">
+        <div class="maker-header"><div class="maker-name">Panasonic VX / LX</div><div class="maker-price">¥30,000</div></div>
+        <div class="maker-body">
+          <div class="maker-row"><span class="ok">✓</span>基本分解清掃</div>
+          <div class="maker-row"><span class="ok">✓</span>乾燥機洗浄（標準含む）</div>
+          <div class="maker-row"><span class="ng">✗</span>洗濯槽分解なし（オプション +¥15,000）</div>
+        </div>
+      </div>
+      <div class="maker-card">
+        <div class="maker-header"><div class="maker-name">Panasonic VG / SD</div><div class="maker-price">¥30,000</div></div>
+        <div class="maker-body">
+          <div class="maker-row"><span class="ok">✓</span>基本分解清掃</div>
+          <div class="maker-row"><span class="ng">✗</span>洗濯槽分解なし（オプション +¥15,000）</div>
+          <div class="maker-row"><span class="ng">✗</span>乾燥機洗浄なし（オプション +¥8,000）</div>
+        </div>
+      </div>
+      <div class="maker-card">
+        <div class="maker-header"><div class="maker-name">HITACHI</div><div class="maker-price">¥35,000</div></div>
+        <div class="maker-body">
+          <div class="maker-row"><span class="ok">✓</span>基本分解清掃</div>
+          <div class="maker-row"><span class="ok">✓</span>洗濯槽分解込み</div>
+          <div class="maker-row"><span class="ok">✓</span>乾燥経路清掃込み</div>
+        </div>
+      </div>
+      <div class="maker-card">
+        <div class="maker-header"><div class="maker-name">TOSHIBA</div><div class="maker-price">¥30,000</div></div>
+        <div class="maker-body">
+          <div class="maker-row"><span class="ok">✓</span>基本分解清掃</div>
+          <div class="maker-row"><span class="ok">✓</span>洗濯槽分解込み</div>
+          <div class="maker-row"><span class="ng">✗</span>乾燥機洗浄なし（オプション +¥15,000）</div>
+        </div>
+      </div>
+      <div class="maker-card">
+        <div class="maker-header"><div class="maker-name">SHARPヒーター式</div><div class="maker-price">¥30,000</div></div>
+        <div class="maker-body">
+          <div class="maker-row"><span class="ok">✓</span>基本分解清掃</div>
+          <div class="maker-row"><span class="ng">✗</span>洗濯槽分解なし（オプション +¥15,000）</div>
+          <div class="maker-row"><span class="ng">✗</span>乾燥機洗浄なし（オプション +¥8,000）</div>
+        </div>
+      </div>
+      <div class="maker-card">
+        <div class="maker-header"><div class="maker-name">SHARPヒートポンプ式</div><div class="maker-price">¥30,000</div></div>
+        <div class="maker-body">
+          <div class="maker-row"><span class="ok">✓</span>基本分解清掃</div>
+          <div class="maker-row"><span class="ok">✓</span>一部機種のみ洗濯槽分解込み</div>
+          <div class="maker-row"><span class="ng">✗</span>乾燥機洗浄なし（オプション +¥15,000）</div>
+        </div>
+      </div>
+      <div class="warning-box">⚠️ 汚れや経年劣化により洗濯槽の分解が難しいと判断した場合はお断りする場合がございます。作業前にご説明いたします。</div>
+      <div class="divider"></div>
+      <div class="category-label">ドラム式オプション</div>
+      <div class="option-row"><div class="option-name">洗濯槽分解洗浄<small>対象：Panasonic全機種 / SHARPヒーター式</small></div><div class="option-price">+¥15,000</div></div>
+      <div class="option-row"><div class="option-name">乾燥機洗浄<small>Panasonic VG/SD・SHARPヒーター式</small></div><div class="option-price">+¥8,000</div></div>
+      <div class="option-row"><div class="option-name">乾燥機洗浄（ヒートポンプ洗浄）<small>TOSHIBA・SHARPヒートポンプ式</small></div><div class="option-price">+¥15,000</div></div>
+      <div class="option-row"><div class="option-name">洗濯パン・排水口清掃<small>移動あり：¥8,000 / 移動なし：¥4,000</small></div><div class="option-price">+¥4,000〜</div></div>
+      <div class="option-row"><div class="option-name">ベルト・ホース交換【Panasonic限定】</div><div class="option-price">+¥5,000</div></div>
+      <div class="option-row"><div class="option-name">ヒートポンプ交換【Panasonic限定】</div><div class="option-price">+¥38,500</div></div>
+      <div class="special-option"><div class="option-name">⭐ 乾燥力改善コース<small>乾燥経路のみ分解清掃・基本料金が¥22,000になります</small></div><div class="option-price">¥22,000</div></div>
+      <div class="note">⏱ 作業時間の目安：3〜5時間</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><div class="section-icon">🫧</div><div class="section-title">縦型洗濯機 分解清掃<small>基本料金・オプション</small></div></div>
+    <div class="section-body">
+      <div class="price-row"><div class="price-name">縦型（〜8kg）</div><div class="price-val">¥20,000</div></div>
+      <div class="price-row"><div class="price-name">縦型（10kg〜）</div><div class="price-val">¥23,000</div></div>
+      <div class="divider"></div>
+      <div class="category-label">縦型オプション</div>
+      <div class="option-row"><div class="option-name">乾燥機能付き清掃</div><div class="option-price">+¥5,000</div></div>
+      <div class="option-row"><div class="option-name">洗濯パン・排水口清掃</div><div class="option-price">+¥4,000</div></div>
+      <div class="option-row"><div class="option-name">嵩上げ台設置（5.5cm）</div><div class="option-price">+¥7,000</div></div>
+      <div class="option-row"><div class="option-name">嵩上げ台設置（10.5cm）</div><div class="option-price">+¥8,000</div></div>
+      <div class="note">⏱ 作業時間の目安：2.5〜3.5時間</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><div class="section-icon">🛁</div><div class="section-title">風呂釜洗浄<small>基本料金・オプション</small></div></div>
+    <div class="section-body">
+      <div class="price-row"><div class="price-name">1つ穴タイプ</div><div class="price-val">¥20,000</div></div>
+      <div class="divider"></div>
+      <div class="category-label">オプション</div>
+      <div class="option-row"><div class="option-name">プレミアム除菌・消臭薬追加</div><div class="option-price">+¥4,000</div></div>
+      <div class="option-row"><div class="option-name">エプロン内高圧洗浄</div><div class="option-price">+¥7,000</div></div>
+      <div class="option-row"><div class="option-name">排水口清掃</div><div class="option-price">+¥1,500</div></div>
+      <div class="option-row"><div class="option-name">浴室鏡ウロコ取り</div><div class="option-price">+¥5,000〜</div></div>
+      <div class="note">⏱ 作業時間の目安：約1.5時間</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><div class="section-icon">❄️</div><div class="section-title">エアコン 分解清掃<small>基本料金（1台あたり）</small></div></div>
+    <div class="section-body">
+      <div class="price-row"><div class="price-name">ノーマル壁掛け</div><div class="price-val">¥11,000〜</div></div>
+      <div class="price-row"><div class="price-name">お掃除機能付き壁掛け</div><div class="price-val">¥16,000〜</div></div>
+      <div class="price-row"><div class="price-name">天井埋め込み</div><div class="price-val">¥18,000〜</div></div>
+      <div class="price-row"><div class="price-name">業務用エアコン4方向</div><div class="price-val">¥25,000〜</div></div>
+      <div class="divider"></div>
+      <div class="category-label">オプション</div>
+      <div class="option-row"><div class="option-name">防カビ抗菌コートスプレー</div><div class="option-price">+¥3,000</div></div>
+      <div class="option-row"><div class="option-name">室外機洗浄</div><div class="option-price">+¥4,000</div></div>
+      <div class="note">⏱ 作業時間の目安：1台あたり1.5〜3時間</div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-bottom:20px;">※ 料金はすべて税込です<br>※ 現地確認後に追加料金が発生する場合は事前にご説明します</div>
+  <a href="index.html" class="btn-reserve">📅 予約はこちら</a>
+</div>
+</body>
+</html>

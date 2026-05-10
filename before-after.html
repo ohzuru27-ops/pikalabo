@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ビフォーアフター | ピカラボ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #5BB8D4; --sky-light: #EBF7FB; --sky-dark: #3A9AB8;
+    --accent: #F4A428; --dark: #1C2B35; --mid: #4A6572;
+    --light: #8FA8B4; --bg: #F5FAFB; --border: #D0E8EF; --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); }
+  .header {
+    background: white; border-bottom: 2px solid var(--sky-light);
+    padding: 16px 24px; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(91,184,212,0.08);
+  }
+  .logo { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 600; color: var(--sky-dark); }
+  .logo span { color: var(--accent); }
+  .main { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+  .page-title { text-align: center; margin-bottom: 24px; }
+  .page-title h1 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .page-title p { font-size: 13px; color: var(--light); }
+
+  /* タブ */
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 18px; border-radius: 20px; border: 1.5px solid var(--border);
+    font-size: 13px; font-weight: 600; cursor: pointer; color: var(--mid);
+    background: white; transition: all 0.15s;
+  }
+  .tab.active { background: var(--sky); color: white; border-color: var(--sky); }
+
+  /* ビフォーアフターカード */
+  .ba-card {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border); margin-bottom: 20px;
+    overflow: hidden; box-shadow: 0 4px 24px rgba(91,184,212,0.08);
+    display: none;
+  }
+  .ba-card.show { display: block; }
+  .ba-tag {
+    padding: 12px 16px; background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    color: white; font-size: 14px; font-weight: 700;
+  }
+  .ba-images {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  }
+  .ba-img-wrap { position: relative; }
+  .ba-img-wrap img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+  }
+  .ba-img-placeholder {
+    width: 100%; aspect-ratio: 1;
+    background: #F0F0F0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    color: #AAAAAA; font-size: 12px;
+  }
+  .ba-img-placeholder span { font-size: 32px; }
+  .ba-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 6px 10px; font-size: 12px; font-weight: 700;
+    text-align: center;
+  }
+  .ba-label.before { background: rgba(224,92,92,0.85); color: white; }
+  .ba-label.after { background: rgba(76,175,130,0.85); color: white; }
+  .ba-desc {
+    padding: 14px 16px; font-size: 13px; color: var(--mid); line-height: 1.8;
+    border-top: 1px solid var(--border);
+  }
+  .ba-desc strong { color: var(--dark); }
+
+  .btn-reserve {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    color: white; border: none; border-radius: 10px; padding: 16px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; text-align: center; text-decoration: none;
+    box-shadow: 0 4px 16px rgba(91,184,212,0.35); margin-top: 8px;
+  }
+  .coming-soon {
+    text-align: center; padding: 40px 20px;
+    color: var(--light); font-size: 14px; display: none;
+  }
+  .coming-soon span { font-size: 40px; display: block; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">ピカ<span>ラボ</span></div>
+</div>
+
+<div class="main">
+  <div class="page-title">
+    <h1>📸 ビフォーアフター</h1>
+    <p>実際のクリーニング前後の写真をご覧ください</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('all')">すべて</div>
+    <div class="tab" onclick="switchTab('washer')">🫧 洗濯機</div>
+    <div class="tab" onclick="switchTab('furo')">🛁 風呂釜</div>
+    <div class="tab" onclick="switchTab('aircon')">❄️ エアコン</div>
+  </div>
+
+  <!-- 洗濯機 事例1 -->
+  <div class="ba-card show" data-category="washer">
+    <div class="ba-tag">🫧 ドラム式洗濯機 / カビ・水垢の除去</div>
+    <div class="ba-images">
+      <div class="ba-img-wrap">
+        <!-- ここに写真を入れてください: <img src="washer1-before.jpg" alt="ビフォー"> -->
+        <div class="ba-img-placeholder"><span>📷</span>写真準備中</div>
+        <div class="ba-label before">BEFORE</div>
+      </div>
+      <div class="ba-img-wrap">
+        <!-- ここに写真を入れてください: <img src="washer1-after.jpg" alt="アフター"> -->
+        <div class="ba-img-placeholder"><span>✨</span>写真準備中</div>
+        <div class="ba-label after">AFTER</div>
+      </div>
+    </div>
+    <div class="ba-desc">
+      <strong>メニュー：</strong>ドラム式洗濯機 分解清掃<br>
+      <strong>状態：</strong>槽内に黒カビが大量発生・洗濯物のニオイが気になる<br>
+      <strong>結果：</strong>黒カビを完全除去し、洗濯物のニオイが解消されました
+    </div>
+  </div>
+
+  <!-- 洗濯機 事例2 -->
+  <div class="ba-card show" data-category="washer">
+    <div class="ba-tag">🫧 縦型洗濯機 / 洗濯槽の汚れ除去</div>
+    <div class="ba-images">
+      <div class="ba-img-wrap">
+        <div class="ba-img-placeholder"><span>📷</span>写真準備中</div>
+        <div class="ba-label before">BEFORE</div>
+      </div>
+      <div class="ba-img-wrap">
+        <div class="ba-img-placeholder"><span>✨</span>写真準備中</div>
+        <div class="ba-label after">AFTER</div>
+      </div>
+    </div>
+    <div class="ba-desc">
+      <strong>メニュー：</strong>縦型洗濯機 分解清掃<br>
+      <strong>状態：</strong>洗濯槽の裏側に茶色い汚れ・水垢が堆積<br>
+      <strong>結果：</strong>槽内を完全分解し、蓄積した汚れをすべて除去しました
+    </div>
+  </div>
+
+  <!-- 風呂釜 事例 -->
+  <div class="ba-card show" data-category="furo">
+    <div class="ba-tag">🛁 風呂釜洗浄 / 追い焚き配管の洗浄</div>
+    <div class="ba-images">
+      <div class="ba-img-wrap">
+        <div class="ba-img-placeholder"><span>📷</span>写真準備中</div>
+        <div class="ba-label before">BEFORE</div>
+      </div>
+      <div class="ba-img-wrap">
+        <div class="ba-img-placeholder"><span>✨</span>写真準備中</div>
+        <div class="ba-label after">AFTER</div>
+      </div>
+    </div>
+    <div class="ba-desc">
+      <strong>メニュー：</strong>風呂釜洗浄<br>
+      <strong>状態：</strong>薬品で洗浄すると見えなかった汚れが反応して可視化<br>
+      <strong>結果：</strong>配管内・給湯器内の汚れを薬品と高温のお湯で洗浄
+    </div>
+  </div>
+
+  <!-- エアコン 事例 -->
+  <div class="ba-card show" data-category="aircon">
+    <div class="ba-tag">❄️ エアコン 分解清掃 / フィン・ファンの洗浄</div>
+    <div class="ba-images">
+      <div class="ba-img-wrap">
+        <div class="ba-img-placeholder"><span>📷</span>写真準備中</div>
+        <div class="ba-label before">BEFORE</div>
+      </div>
+      <div class="ba-img-wrap">
+        <div class="ba-img-placeholder"><span>✨</span>写真準備中</div>
+        <div class="ba-label after">AFTER</div>
+      </div>
+    </div>
+    <div class="ba-desc">
+      <strong>メニュー：</strong>エアコン 分解清掃<br>
+      <strong>状態：</strong>フィンに黒カビが繁殖・運転時に嫌なニオイが発生<br>
+      <strong>結果：</strong>フィン・ファンを分解洗浄しカビを完全除去。ニオイがなくなり冷暖房効率も改善しました
+    </div>
+  </div>
+
+  <a href="index.html" class="btn-reserve">📅 予約はこちら</a>
+</div>
+
+<script>
+function switchTab(cat) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.ba-card').forEach(card => {
+    if (cat === 'all' || card.dataset.category === cat) {
+      card.classList.add('show');
+    } else {
+      card.classList.remove('show');
+    }
+  });
+}
+</script>
+</body>
+</html>

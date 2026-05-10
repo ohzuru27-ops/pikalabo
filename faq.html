@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>よくある質問 | ピカラボ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #5BB8D4; --sky-light: #EBF7FB; --sky-dark: #3A9AB8;
+    --accent: #F4A428; --dark: #1C2B35; --mid: #4A6572;
+    --light: #8FA8B4; --bg: #F5FAFB; --border: #D0E8EF; --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); }
+  .header {
+    background: white; border-bottom: 2px solid var(--sky-light);
+    padding: 16px 24px; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(91,184,212,0.08);
+  }
+  .logo { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 600; color: var(--sky-dark); }
+  .logo span { color: var(--accent); }
+  .main { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+  .page-title {
+    text-align: center; margin-bottom: 24px;
+  }
+  .page-title h1 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .page-title p { font-size: 13px; color: var(--light); }
+  .faq-item {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border); margin-bottom: 12px;
+    overflow: hidden; box-shadow: 0 2px 8px rgba(91,184,212,0.05);
+  }
+  .faq-q {
+    padding: 16px 20px; display: flex; align-items: flex-start;
+    gap: 12px; cursor: pointer; user-select: none;
+    transition: background 0.2s;
+  }
+  .faq-q:hover { background: var(--sky-light); }
+  .faq-q-badge {
+    background: var(--sky); color: white; font-size: 12px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+  }
+  .faq-q-text { font-size: 14px; font-weight: 600; color: var(--dark); flex: 1; line-height: 1.6; }
+  .faq-arrow { color: var(--sky); font-size: 14px; flex-shrink: 0; transition: transform 0.2s; margin-top: 2px; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a {
+    display: none; padding: 0 20px 16px 44px;
+    font-size: 13px; color: var(--mid); line-height: 1.9;
+    border-top: 1px solid var(--border);
+  }
+  .faq-a-inner { padding-top: 14px; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-a strong { color: var(--dark); }
+  .maker-list {
+    background: var(--sky-light); border-radius: 8px; padding: 10px 14px;
+    margin: 8px 0; font-size: 12px; color: var(--mid); line-height: 1.8;
+  }
+  .maker-list .ok { color: var(--sky-dark); font-weight: 700; }
+  .maker-list .ng { color: #E05C5C; font-weight: 700; }
+  .cancel-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+  .cancel-table th { background: var(--sky); color: white; padding: 6px 10px; text-align: left; }
+  .cancel-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .cancel-table tr:last-child td { border-bottom: none; }
+  .category-label {
+    font-size: 11px; font-weight: 700; color: var(--sky-dark);
+    background: var(--sky-light); padding: 4px 12px; border-radius: 20px;
+    display: inline-block; margin: 16px 0 10px;
+  }
+  .btn-reserve {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    color: white; border: none; border-radius: 10px; padding: 16px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; text-align: center; text-decoration: none;
+    box-shadow: 0 4px 16px rgba(91,184,212,0.35); margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">ピカ<span>ラボ</span></div>
+</div>
+
+<div class="main">
+  <div class="page-title">
+    <h1>❓ よくある質問</h1>
+    <p>お客様からよくいただく質問をまとめました</p>
+  </div>
+
+  <div class="category-label">洗濯機について</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">すべてのドラム式洗濯機がクリーニング対象ですか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        ドラム式洗濯機は以下のメーカーのみ承っております。
+        <div class="maker-list">
+          <span class="ok">✓ 対応：</span>Panasonic・HITACHI・SHARP・TOSHIBA<br>
+          <span class="ng">✗ 非対応：</span>AQUA・アイリスオーヤマ・ミーレ・ニトリ製など
+        </div>
+        ご不明な場合はLINEよりお気軽にお問い合わせください。
+      </div>
+    </div>
+  </div>
+
+  <div class="category-label">サービスエリアについて</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">対応エリアはどこですか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        主に<strong>東京・神奈川・埼玉・千葉</strong>を対応エリアとしております。<br><br>
+        上記エリア外でも出張サービスとして承ることができます。その場合は別途<strong>出張費</strong>をいただいております。<br><br>
+        エリア外の方もまずはLINEよりご相談ください。
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">出張費はかかりますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        川崎市高津区を拠点としており、距離に応じて出張費をいただいております：<br><br>
+        <table class="cancel-table">
+          <tr><th>距離</th><th>出張費</th></tr>
+          <tr><td>〜30km</td><td>無料</td></tr>
+          <tr><td>30〜50km</td><td>+¥3,000</td></tr>
+          <tr><td>51〜80km</td><td>+¥5,000</td></tr>
+          <tr><td>81km以上</td><td>要相談</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="category-label">作業について</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">作業時間はどのくらいかかりますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        目安の作業時間は以下の通りです：<br><br>
+        🫧 <strong>ドラム式洗濯機</strong>：3〜5時間程度<br>
+        🫧 <strong>縦型洗濯機</strong>：2.5〜3.5時間程度<br>
+        🛁 <strong>風呂釜洗浄</strong>：1.5時間程度<br>
+        ❄️ <strong>エアコン</strong>：1台あたり1.5〜3時間程度<br><br>
+        ※ オプション内容や機器の状態によって前後する場合があります。
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">作業中は立ち会いが必要ですか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        <strong>作業開始時と終了時の立ち会い</strong>をお願いしております。<br><br>
+        作業中はお出かけいただいても構いません。終了の際にご連絡いたします。<br><br>
+        作業後は試運転を行い、お客様にご確認いただいてから完了となります。
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">作業当日にお客様が準備することはありますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        以下のご準備をお願いしております：<br><br>
+        ・<strong>洗濯機周囲のものをご移動</strong>いただけると作業がスムーズです<br>
+        ・部品の洗浄に<strong>お風呂場をお借り</strong>しております。浴槽内に壊れやすいものがある場合はご移動をお願いします
+      </div>
+    </div>
+  </div>
+
+  <div class="category-label">料金・支払いについて</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">洗濯機をクリーニングすると寿命は伸びますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        クリーニングによって<strong>寿命が延びるわけではありません</strong>。<br><br>
+        現在の汚れ（カビ・水垢・洗剤カス）を除去し、<strong>本来の洗浄力・乾燥力を回復</strong>させるものです。<br><br>
+        洗濯槽の汚れは衣類への雑菌の付着やニオイの原因になりますので、定期的なクリーニングをおすすめしています。
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">キャンセルはできますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        キャンセルは承っておりますが、以下のキャンセル料が発生します：
+        <table class="cancel-table">
+          <tr><th>キャンセル時期</th><th>キャンセル料</th></tr>
+          <tr><td>2〜3日前</td><td>料金の30%</td></tr>
+          <tr><td>前日</td><td>料金の50%</td></tr>
+          <tr><td>当日・無断キャンセル</td><td>料金の100%</td></tr>
+        </table>
+        日程変更の場合はお早めにLINEよりご連絡ください。
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">支払い方法は何がありますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        現在は<strong>現金・銀行振込</strong>のみ対応しております。<br><br>
+        作業完了後にお支払いをお願いしております。<br><br>
+        ※ キャッシュレス決済の導入も検討中です。
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      <span class="faq-q-badge">Q</span>
+      <span class="faq-q-text">7年以上の洗濯機・10年以上のエアコンは対応できますか？</span>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">
+      <div class="faq-a-inner">
+        クリーニング自体は承りますが、<strong>7年以上の洗濯機・10年以上のエアコン</strong>については経年劣化による部品の破損等が発生した場合、<strong>保証対象外</strong>となります。<br><br>
+        作業前にご説明いたしますので、ご了承の上でお申し込みください。
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="btn-reserve">📅 予約はこちら</a>
+
+</div>
+
+<script>
+function toggleFaq(el) {
+  const item = el.closest('.faq-item');
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>
