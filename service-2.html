@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>詳しいサービス内容・清掃範囲 | ピカラボ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #5BB8D4; --sky-light: #EBF7FB; --sky-dark: #3A9AB8;
+    --accent: #F4A428; --dark: #1C2B35; --mid: #4A6572;
+    --light: #8FA8B4; --bg: #F5FAFB; --border: #D0E8EF; --radius: 12px;
+    --danger: #E05C5C; --danger-light: #FFF0F0;
+    --success: #4CAF82; --success-light: #E8F8EF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); }
+  .header {
+    background: white; border-bottom: 2px solid var(--sky-light);
+    padding: 16px 24px; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(91,184,212,0.08);
+  }
+  .logo { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 600; color: var(--sky-dark); }
+  .logo span { color: var(--accent); }
+  .main { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  /* タブ */
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+    font-size: 13px; font-weight: 600; cursor: pointer; color: var(--mid);
+    background: white; transition: all 0.15s;
+  }
+  .tab.active { background: var(--sky); color: white; border-color: var(--sky); }
+
+  /* セクション */
+  .section { display: none; }
+  .section.show { display: block; }
+
+  /* メニューカード */
+  .menu-card {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border); margin-bottom: 20px;
+    overflow: hidden; box-shadow: 0 4px 24px rgba(91,184,212,0.08);
+  }
+  .menu-header {
+    background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    padding: 18px 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .menu-icon { font-size: 24px; }
+  .menu-title { color: white; font-size: 17px; font-weight: 700; }
+  .menu-title small { display: block; font-size: 12px; font-weight: 400; opacity: 0.85; margin-top: 2px; }
+  .menu-body { padding: 20px; }
+
+  /* 清掃範囲リスト */
+  .range-title {
+    font-size: 13px; font-weight: 700; color: var(--sky-dark);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+  }
+  .range-title::before { content: '▶'; font-size: 9px; }
+  .range-list { list-style: none; margin-bottom: 16px; }
+  .range-list li {
+    font-size: 13px; color: var(--mid); padding: 6px 0;
+    border-bottom: 1px solid var(--bg); display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.6;
+  }
+  .range-list li::before { content: '✓'; color: var(--sky); font-weight: 700; flex-shrink: 0; }
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .note { font-size: 12px; color: var(--light); padding: 12px; background: var(--bg); border-radius: 8px; margin-top: 12px; line-height: 1.8; }
+
+  /* オプションカード */
+  .option-card {
+    border: 1px solid var(--border); border-radius: 12px;
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .option-card-header {
+    padding: 14px 16px; background: var(--sky-light);
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .option-card-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+  .option-card-price { font-size: 14px; font-weight: 700; color: var(--sky-dark); white-space: nowrap; }
+  .option-card-body { padding: 16px; background: white; }
+
+  /* ビフォーアフター写真 */
+  .ba-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
+  }
+  .ba-img-wrap { position: relative; border-radius: 8px; overflow: hidden; }
+  .ba-img-wrap img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+  .ba-placeholder {
+    width: 100%; aspect-ratio: 4/3; background: #F0F0F0;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 6px; color: #AAAAAA; font-size: 11px;
+  }
+  .ba-placeholder span { font-size: 28px; }
+  .ba-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 4px 8px; font-size: 11px; font-weight: 700; text-align: center;
+  }
+  .ba-label.before { background: rgba(224,92,92,0.85); color: white; }
+  .ba-label.after { background: rgba(76,175,130,0.85); color: white; }
+
+  /* お悩み・放置ボックス */
+  .trouble-box {
+    background: #FFF8E8; border: 1px solid #F4D88A;
+    border-left: 4px solid var(--accent);
+    border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .trouble-box-title {
+    font-size: 12px; font-weight: 700; color: var(--accent);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
+  }
+  .trouble-box-list { font-size: 13px; color: var(--dark); line-height: 1.8; }
+  .danger-box {
+    background: var(--danger-light); border: 1px solid #F4B8B8;
+    border-left: 4px solid var(--danger);
+    border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .danger-box-title {
+    font-size: 12px; font-weight: 700; color: var(--danger);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 4px;
+  }
+  .danger-box-list { font-size: 13px; color: var(--dark); line-height: 1.8; }
+
+  /* 特別カード（乾燥力改善コース） */
+  .special-card {
+    border: 2px solid #B8A0FF; border-radius: 12px;
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .special-card .option-card-header { background: #FAF8FF; border-bottom-color: #B8A0FF; }
+  .special-card .option-card-name { color: #5B3FCC; }
+  .special-card .option-card-price { color: #7B61FF; }
+  .special-badge {
+    display: inline-block; background: #7B61FF; color: white;
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 6px;
+  }
+
+  .btn-reserve {
+    display: block; width: 100%;
+    background: linear-gradient(135deg, var(--sky), var(--sky-dark));
+    color: white; border: none; border-radius: 10px; padding: 16px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; text-align: center; text-decoration: none;
+    box-shadow: 0 4px 16px rgba(91,184,212,0.35); margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">ピカ<span>ラボ</span></div>
+</div>
+
+<div class="main">
+
+  <!-- タブ -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('washer')">🫧 洗濯機</div>
+    <div class="tab" onclick="switchTab('furo')">🛁 風呂釜</div>
+    <div class="tab" onclick="switchTab('aircon')">❄️ エアコン</div>
+  </div>
+
+  <!-- ===== 洗濯機 ===== -->
+  <div class="section show" id="sec-washer">
+
+    <!-- 基本清掃 -->
+    <div class="menu-card">
+      <div class="menu-header">
+        <div class="menu-icon">🫧</div>
+        <div class="menu-title">洗濯機 分解清掃<small>基本の清掃範囲</small></div>
+      </div>
+      <div class="menu-body">
+        <!-- 縦型・ドラム切り替えタブ -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <div id="wtab-tate" onclick="switchWasher('tate')" style="flex:1;text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--sky);background:var(--sky);color:white;font-size:13px;font-weight:700;cursor:pointer;">縦型</div>
+          <div id="wtab-drum" onclick="switchWasher('drum')" style="flex:1;text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:white;color:var(--mid);font-size:13px;font-weight:700;cursor:pointer;">ドラム式</div>
+        </div>
+
+        <!-- 縦型 -->
+        <div id="washer-tate">
+          <div class="range-title">縦型洗濯機の清掃範囲</div>
+          <ul class="range-list">
+            <li>洗濯槽の分解・徹底洗浄（カビ・水垢・洗剤カス除去）</li>
+            <li>パルセーター（羽根）の分解洗浄</li>
+            <li>洗剤投入口・洗剤ケースの洗浄</li>
+            <li>外装パネルの清掃・拭き上げ</li>
+            <li>作業後の試運転・動作確認</li>
+          </ul>
+          <div class="note">⏱ 作業時間：2.5〜3.5時間</div>
+        </div>
+
+        <!-- ドラム式 -->
+        <div id="washer-drum" style="display:none;">
+          <div class="range-title">ドラム式洗濯機の清掃範囲</div>
+          <ul class="range-list">
+            <li>脱水受けカバーの洗浄</li>
+            <li>洗剤投入口・洗剤ケースの洗浄</li>
+            <li>糸くず・排水フィルターの洗浄</li>
+            <li>洗濯槽の分解・徹底洗浄（一部メニューのみ）</li>
+            <li>乾燥機の洗浄（一部メニューのみ）</li>
+            <li>作業後の試運転・動作確認</li>
+          </ul>
+          <div class="note">
+            ⏱ 作業時間：3〜5時間<br>
+            対応メーカー：Panasonic・HITACHI・SHARP・TOSHIBA
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- オプション見出し -->
+    <div style="font-size:16px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-left:4px;">
+      🔧 ドラム式洗濯機 追加オプション
+    </div>
+
+    <!-- 洗濯槽分解洗浄 -->
+    <div class="option-card">
+      <div class="option-card-header">
+        <div class="option-card-name">洗濯槽分解洗浄</div>
+        <div class="option-card-price">+¥15,000</div>
+      </div>
+      <div class="option-card-body">
+        <div class="ba-wrap">
+          <div class="ba-img-wrap">
+            <!-- <img src="drum-slot-before.jpg" alt="ビフォー"> -->
+            <div class="ba-placeholder"><span>📷</span>写真準備中</div>
+            <div class="ba-label before">BEFORE</div>
+          </div>
+          <div class="ba-img-wrap">
+            <!-- <img src="drum-slot-after.jpg" alt="アフター"> -->
+            <div class="ba-placeholder"><span>✨</span>写真準備中</div>
+            <div class="ba-label after">AFTER</div>
+          </div>
+        </div>
+        <div class="trouble-box">
+          <div class="trouble-box-title">💬 こんな方におすすめ</div>
+          <div class="trouble-box-list">
+            ・洗濯物・洗濯機がカビ臭い<br>
+            ・洗濯物に黒いカスが付いてくる
+          </div>
+        </div>
+        <div class="danger-box">
+          <div class="danger-box-title">⚠️ 放置するとこんな問題が</div>
+          <div class="danger-box-list">
+            カビが衣類に付着し続け、アレルギーや肌荒れの原因になります。特に小さなお子様がいるご家庭は要注意。
+          </div>
+        </div>
+        <div class="note">対象：Panasonic全機種 / SHARPヒーター式</div>
+      </div>
+    </div>
+
+    <!-- 乾燥機洗浄 -->
+    <div class="option-card">
+      <div class="option-card-header">
+        <div class="option-card-name">乾燥機洗浄</div>
+        <div class="option-card-price">+¥8,000〜¥15,000</div>
+      </div>
+      <div class="option-card-body">
+        <div class="ba-wrap">
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>📷</span>写真準備中</div>
+            <div class="ba-label before">BEFORE</div>
+          </div>
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>✨</span>写真準備中</div>
+            <div class="ba-label after">AFTER</div>
+          </div>
+        </div>
+        <div class="trouble-box">
+          <div class="trouble-box-title">💬 こんな方におすすめ</div>
+          <div class="trouble-box-list">
+            ・乾燥に時間がかかるようになった<br>
+            ・乾燥後の洗濯物が臭い
+          </div>
+        </div>
+        <div class="danger-box">
+          <div class="danger-box-title">⚠️ 放置するとこんな問題が</div>
+          <div class="danger-box-list">
+            乾燥経路・乾燥機に繊維クズが詰まり続け、乾燥能力がどんどん悪化します。最終的に乾燥機能が使えなくなることも。
+          </div>
+        </div>
+        <div class="note">
+          ヒーター式（Panasonic VG/SD・SHARPヒーター式）：+¥8,000<br>
+          ヒートポンプ式（TOSHIBA・SHARPヒートポンプ式）：+¥15,000
+        </div>
+      </div>
+    </div>
+
+    <!-- ヒートポンプ交換 -->
+    <div class="option-card">
+      <div class="option-card-header">
+        <div class="option-card-name">ヒートポンプ交換【Panasonic限定】</div>
+        <div class="option-card-price">+¥38,500</div>
+      </div>
+      <div class="option-card-body">
+        <div class="ba-wrap">
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>📷</span>写真準備中</div>
+            <div class="ba-label before">BEFORE</div>
+          </div>
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>✨</span>写真準備中</div>
+            <div class="ba-label after">AFTER</div>
+          </div>
+        </div>
+        <div class="trouble-box">
+          <div class="trouble-box-title">💬 こんな方におすすめ</div>
+          <div class="trouble-box-list">
+            ・乾燥運転で30分経過しても風が冷たいまま<br>
+            ・乾燥能力を新品同様に戻したい方
+          </div>
+        </div>
+        <div class="danger-box">
+          <div class="danger-box-title">⚠️ 放置するとこんな問題が</div>
+          <div class="danger-box-list">
+            ヒートポンプユニットの故障が進行し、完全に乾燥機能が失われます。交換費用は早めの対処ほど安く済みます。
+          </div>
+        </div>
+        <div style="background:#EBF7FB;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:var(--mid);line-height:1.8;">
+          💡 乾燥の風が出ないというお悩みは通常のクリーニングで解決することが多いです。まずは基本クリーニングをお試しください。
+        </div>
+      </div>
+    </div>
+
+    <!-- ベルト・ホース交換 -->
+    <div class="option-card">
+      <div class="option-card-header">
+        <div class="option-card-name">ベルト・ホース交換【Panasonic限定】</div>
+        <div class="option-card-price">+¥5,000〜¥9,000</div>
+      </div>
+      <div class="option-card-body">
+        <div class="ba-wrap">
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>📷</span>写真準備中</div>
+            <div class="ba-label before">BEFORE</div>
+          </div>
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>✨</span>写真準備中</div>
+            <div class="ba-label after">AFTER</div>
+          </div>
+        </div>
+        <div class="trouble-box">
+          <div class="trouble-box-title">💬 こんな方におすすめ</div>
+          <div class="trouble-box-list">
+            ・洗濯機から大きな音・揺れがする<br>
+            ・乾燥時間が遅い<br>
+            ・水漏れがある
+          </div>
+        </div>
+        <div class="danger-box">
+          <div class="danger-box-title">⚠️ 放置するとこんな問題が</div>
+          <div class="danger-box-list">
+            洗濯機に負荷がかかり続け寿命が削れます。最終的に洗濯槽が回らなくなり、買い替えが必要になることも。
+          </div>
+        </div>
+        <div class="note">当日の現地確認で交換の必要性をご説明します</div>
+      </div>
+    </div>
+
+    <!-- 洗濯パン・排水口清掃 -->
+    <div class="option-card">
+      <div class="option-card-header">
+        <div class="option-card-name">洗濯パン・排水口清掃</div>
+        <div class="option-card-price">+¥4,000〜¥8,000</div>
+      </div>
+      <div class="option-card-body">
+        <div class="ba-wrap">
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>📷</span>写真準備中</div>
+            <div class="ba-label before">BEFORE</div>
+          </div>
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>✨</span>写真準備中</div>
+            <div class="ba-label after">AFTER</div>
+          </div>
+        </div>
+        <div class="trouble-box">
+          <div class="trouble-box-title">💬 こんな方におすすめ</div>
+          <div class="trouble-box-list">
+            ・洗濯機の下から嫌な臭いがする<br>
+            ・排水に時間がかかる・流れが遅い
+          </div>
+        </div>
+        <div class="danger-box">
+          <div class="danger-box-title">⚠️ 放置するとこんな問題が</div>
+          <div class="danger-box-list">
+            排水口が完全に詰まり、水が溢れて漏水します。床材・下の階への水漏れ被害になる前に対処を。
+          </div>
+        </div>
+        <div class="note">移動あり：¥8,000 / 移動なし：¥4,000<br>洗濯槽分解 or 乾燥機洗浄と同時お申し込みで¥4,000</div>
+      </div>
+    </div>
+
+    <!-- 乾燥力改善コース -->
+    <div class="special-card">
+      <div class="option-card-header">
+        <div class="option-card-name">🌟 乾燥力改善コース <span class="special-badge">おすすめ</span></div>
+        <div class="option-card-price" style="color:#7B61FF;">¥22,000</div>
+      </div>
+      <div class="option-card-body">
+        <div class="ba-wrap">
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>📷</span>写真準備中</div>
+            <div class="ba-label before">BEFORE</div>
+          </div>
+          <div class="ba-img-wrap">
+            <div class="ba-placeholder"><span>✨</span>写真準備中</div>
+            <div class="ba-label after">AFTER</div>
+          </div>
+        </div>
+        <div style="background:#FAF8FF;border:1px solid #B8A0FF;border-left:4px solid #7B61FF;border-radius:8px;padding:12px 14px;margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:700;color:#7B61FF;margin-bottom:6px;">💜 こんな方におすすめ</div>
+          <div style="font-size:13px;color:var(--dark);line-height:1.8;">
+            ・乾燥時間が長いけど費用を抑えたい<br>
+            ・まず乾燥まわりだけ集中してきれいにしたい
+          </div>
+        </div>
+        <div style="background:#F8F0FF;border:1px solid #D4B8FF;border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--mid);line-height:1.8;">
+          乾燥機・乾燥経路に関わる箇所のみを集中分解清掃。<br>
+          本体のフル分解なしでコストを抑えながら乾燥力を回復します。<br><br>
+          <strong style="color:#5B3FCC;">通常¥30,000のドラム式基本料金が¥22,000になります</strong>
+        </div>
+        <div class="note">※ 本体分解クリーニングは含まれません。洗濯槽の汚れが気になる方は基本コースをおすすめします。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 風呂釜 ===== -->
+  <div class="section" id="sec-furo">
+    <div class="menu-card">
+      <div class="menu-header">
+        <div class="menu-icon">🛁</div>
+        <div class="menu-title">風呂釜洗浄<small>基本の清掃範囲とオプション</small></div>
+      </div>
+      <div class="menu-body">
+        <div class="range-title">基本清掃の範囲</div>
+        <ul class="range-list">
+          <li>4〜5種類の専用薬品を段階的に投入し、異なる種類の汚れを順番に除去</li>
+          <li>循環口フィルターの清掃</li>
+          <li>浴槽内の汚れ除去・拭き上げ</li>
+          <li>洗浄後の動作確認</li>
+        </ul>
+        <div style="background:#EBF7FB;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:var(--mid);line-height:1.8;">
+          💡 高圧洗浄ではなく専用薬品で安全に洗浄します。配管を傷めることなく、見えない汚れまで丁寧に除去します。
+        </div>
+        <div class="note">※ 1つ穴タイプのみ対応しております<br>⏱ 作業時間：約1.5時間</div>
+        <div class="divider"></div>
+        <div class="range-title">オプション</div>
+        <div style="font-size:13px;color:var(--mid);line-height:2;">
+          プレミアム除菌・消臭薬追加 +¥4,000<br>
+          エプロン内高圧洗浄 +¥7,000<br>
+          排水口清掃 +¥1,500<br>
+          浴室鏡ウロコ取り +¥5,000〜
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== エアコン ===== -->
+  <div class="section" id="sec-aircon">
+    <div class="menu-card">
+      <div class="menu-header">
+        <div class="menu-icon">❄️</div>
+        <div class="menu-title">エアコン 分解清掃<small>基本の清掃範囲とオプション</small></div>
+      </div>
+      <div class="menu-body">
+        <div class="range-title">基本清掃の範囲</div>
+        <ul class="range-list">
+          <li>フィルターの取り外し・高圧洗浄</li>
+          <li>フィン（熱交換器）の高圧洗浄</li>
+          <li>ファン（送風羽根）の分解・洗浄</li>
+          <li>ドレンパン（水受け皿）の清掃</li>
+          <li>ルーバー（風向き板）の取り外し洗浄</li>
+          <li>外装パネルの拭き上げ</li>
+          <li>作業後の動作確認（試運転・冷暖房チェック）</li>
+        </ul>
+        <div class="note">⏱ 作業時間：1台あたり1.5〜3時間（複数台の場合はご相談）</div>
+        <div class="divider"></div>
+        <div class="range-title">オプション</div>
+        <div style="font-size:13px;color:var(--mid);line-height:2;">
+          防カビ抗菌コートスプレー +¥3,000<br>
+          室外機洗浄 +¥4,000
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="btn-reserve">📅 予約はこちら</a>
+
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('show'); });
+  event.target.classList.add('active');
+  document.getElementById('sec-' + tab).classList.add('show');
+}
+
+function switchWasher(type) {
+  const tate = document.getElementById('washer-tate');
+  const drum = document.getElementById('washer-drum');
+  const tabTate = document.getElementById('wtab-tate');
+  const tabDrum = document.getElementById('wtab-drum');
+  if (type === 'tate') {
+    tate.style.display = 'block';
+    drum.style.display = 'none';
+    tabTate.style.background = 'var(--sky)';
+    tabTate.style.color = 'white';
+    tabTate.style.borderColor = 'var(--sky)';
+    tabDrum.style.background = 'white';
+    tabDrum.style.color = 'var(--mid)';
+    tabDrum.style.borderColor = 'var(--border)';
+  } else {
+    tate.style.display = 'none';
+    drum.style.display = 'block';
+    tabDrum.style.background = 'var(--sky)';
+    tabDrum.style.color = 'white';
+    tabDrum.style.borderColor = 'var(--sky)';
+    tabTate.style.background = 'white';
+    tabTate.style.color = 'var(--mid)';
+    tabTate.style.borderColor = 'var(--border)';
+  }
+}
+</script>
+</body>
+</html>
