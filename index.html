@@ -829,6 +829,16 @@
 
   /* 確認画面：料金内訳 */
   .menu-card { position: relative; }
+  .move-set-badge {
+    margin-top: 6px; padding: 6px 10px; border-radius: 8px; display: inline-block;
+    background: #FFF6E5; border: 1px dashed #F0A64A; color: #A0620A; font-size: 11px; font-weight: 700;
+  }
+  .move-set-badge b { font-size: 14px; font-weight: 900; }
+  .move-set-badge.on {
+    background: linear-gradient(135deg, #FFEDE8, #FFDCD2); border: 2px solid #E8503A; color: #B5412A; font-size: 12px;
+  }
+  .move-set-badge.on b { font-size: 18px; color: #E8503A; }
+  .move-set-badge s { color: #999; font-weight: 400; margin-left: 4px; }
   .bundle-badge {
     margin-top: 6px; padding: 4px 6px; border-radius: 6px;
     background: #FFEDE8; color: #E8503A; font-size: 10px; font-weight: 700; line-height: 1.4;
@@ -1543,11 +1553,19 @@ const drumOptions = [
     duration: '+20分',
     detailAnchor: 'pan',
   },
-  { id: 'd4', name: 'ベルト・ホース交換【Panasonic限定】', price: '+¥3,000', priceNum: 3000,
-    desc: 'ベルト・ホースを新品に交換',
+  { id: 'd4', name: 'ベルト交換【Panasonic限定】', price: '+¥5,000（セットで¥3,000）', priceNum: 5000,
+    desc: '劣化したベルトを新品に交換。通常+¥5,000 / 洗濯機の移動を伴うオプション（VX/LX：ドラム槽抜き洗浄、VG/SD：ドラム槽抜き洗浄または乾燥機洗浄）と同時なら+¥3,000',
+    priceFn: (sel, maker) => hasMoveOption(sel, maker) ? 3000 : 5000,
+    moveSet: true,
     makerIds: ['panasonic_vx','panasonic_vg'],
     detailAnchor: 'belt',
-    detailAnchor2: 'hose',
+  },
+  { id: 'd4h', name: 'ホース交換【Panasonic VG/SD限定】', price: '+¥5,000（セットで¥3,000）', priceNum: 5000,
+    desc: '破れやすい乾燥用ダクトホースを新品に交換。通常+¥5,000 / ドラム槽抜き洗浄または乾燥機洗浄と同時なら+¥3,000',
+    priceFn: (sel, maker) => hasMoveOption(sel, maker) ? 3000 : 5000,
+    moveSet: true,
+    makerIds: ['panasonic_vg'],
+    detailAnchor: 'hose',
   },
   { id: 'd_bolt', name: 'ボルト交換【TOSHIBA限定】', price: '+¥1,500', priceNum: 1500,
     desc: 'ボルトを新品に交換',
@@ -1585,6 +1603,16 @@ function getConflictName(o, sel, opts) {
   const hit = o.conflictIds.find(id => sel.includes(id) && opts.some(x => x.id === id));
   if (!hit) return null;
   return o.id === 'd6' ? 'ドラム槽抜き洗浄・乾燥機洗浄' : '乾燥力改善コース';
+}
+
+// 洗濯機の移動を伴うオプションが選ばれているか（ベルト・ホース交換のセット料金用）
+function hasMoveOption(sel, maker) {
+  if (maker === 'panasonic_vx') return sel.includes('d1');
+  if (maker === 'panasonic_vg') return sel.includes('d1') || sel.includes('d2a');
+  return false;
+}
+function moveOptionLabel(maker) {
+  return maker === 'panasonic_vg' ? '「ドラム槽抜き洗浄」か「乾燥機洗浄」' : '「ドラム槽抜き洗浄」';
 }
 
 // オプションの実際の金額（セット割を反映）
@@ -2339,15 +2367,22 @@ function renderOptions() {
         const actual = getOptionPriceNum(o, selectedOpts);
         const hasDiscount = actual < o.priceNum;
         const displayPrice = actual === 0 ? '無料' : '+¥' + actual.toLocaleString();
+        const priceStyle = (o.moveSet && hasDiscount) ? 'color:#E8503A;font-size:15px;font-weight:900;' : '';
         html += '<div class="option-item' + selClass + '" id="opt_' + o.id + '" onclick="toggleOption(\'' + o.id + '\')">';
         html += '<div class="option-checkbox' + selClass + '" id="chk_' + o.id + '">' + (isSelected ? '✓' : '') + '</div>';
         html += '<div class="option-info" style="width:100%;">';
         html += '<div class="option-name">' + o.name + '</div>';
         html += '<div class="option-desc">' + desc + '</div>';
         html += buildDetailLinkHtml(o);
-        if (hasDiscount) html += '<div style="margin-top:4px;padding:3px 8px;background:#E8F8EF;border-radius:4px;font-size:11px;color:#2E7D52;font-weight:600;display:inline-block;">' + (actual === 0 ? '✓ セットで無料' : '✓ セット割適用中') + '</div>';
+        if (o.moveSet) {
+          if (hasDiscount) {
+            html += '<div class="move-set-badge on">🎉 移動を伴うオプションとセットで <b>¥3,000</b> <s>¥5,000</s></div>';
+          } else {
+            html += '<div class="move-set-badge">💡 ' + moveOptionLabel(state.drumMakerId) + 'と一緒に選ぶと <b>¥3,000</b> になります</div>';
+          }
+        } else if (hasDiscount) html += '<div style="margin-top:4px;padding:3px 8px;background:#E8F8EF;border-radius:4px;font-size:11px;color:#2E7D52;font-weight:600;display:inline-block;">' + (actual === 0 ? '✓ セットで無料' : '✓ セット割適用中') + '</div>';
         html += '</div>';
-        html += '<div class="option-price" style="white-space:nowrap;">' + displayPrice + '</div>';
+        html += '<div class="option-price" style="white-space:nowrap;' + priceStyle + '">' + displayPrice + '</div>';
         html += '</div>';
         return;
       }
