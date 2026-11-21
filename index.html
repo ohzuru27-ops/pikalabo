@@ -828,6 +828,35 @@
   }
 
   /* 確認画面：料金内訳 */
+  .menu-card { position: relative; }
+  .bundle-badge {
+    margin-top: 6px; padding: 4px 6px; border-radius: 6px;
+    background: #FFEDE8; color: #E8503A; font-size: 10px; font-weight: 700; line-height: 1.4;
+  }
+  .bundle-badge b { font-size: 15px; font-weight: 900; }
+  .bundle-banner {
+    margin-top: 14px; padding: 14px 16px; border-radius: 12px; text-align: center;
+    background: linear-gradient(135deg, #FFF1EC, #FFE3D9); border: 2px solid #F08A70;
+    animation: fadeIn 0.25s;
+  }
+  .bundle-banner.applied { background: linear-gradient(135deg, #E9F9EF, #D6F3E1); border-color: #3FB36B; }
+  .bundle-title { font-size: 13px; font-weight: 700; color: #B5412A; }
+  .bundle-banner.applied .bundle-title { color: #2E7D52; }
+  .bundle-amount { font-size: 15px; font-weight: 700; color: #B5412A; margin-top: 2px; }
+  .bundle-banner.applied .bundle-amount { color: #2E7D52; }
+  .bundle-amount b { font-size: 30px; font-weight: 900; color: #E8503A; letter-spacing: 0.5px; }
+  .bundle-banner.applied .bundle-amount b { color: #1F9D55; }
+  .bundle-sub { font-size: 11px; color: #8B5A4A; margin-top: 4px; }
+  .bundle-btn {
+    margin-top: 10px; padding: 10px 18px; border: none; border-radius: 999px; cursor: pointer;
+    background: #E8503A; color: white; font-size: 13px; font-weight: 700;
+    box-shadow: 0 3px 10px rgba(232,80,58,0.3);
+  }
+  .bundle-chip {
+    margin-top: 2px; display: inline-block; padding: 2px 8px; border-radius: 999px;
+    background: #FFEDE8; color: #E8503A; font-size: 11px; font-weight: 700;
+  }
+  .bundle-chip b { font-size: 13px; font-weight: 900; }
   .price-breakdown {
     margin-top: 4px;
     margin-bottom: 18px;
@@ -1024,7 +1053,7 @@
         </div>
         <div class="menu-name">洗濯機<br>分解清掃</div>
         <div class="menu-price">¥20,000〜</div>
-        <div style="font-size:10px;color:var(--light);margin-top:4px;">⏱ 縦型2.5〜3.5h／ドラム3〜5h</div>
+        <div style="font-size:10px;color:var(--light);margin-top:4px;">⏱ 縦型2.5〜3.5h／ドラム3〜4.5h</div>
       </div>
       <div class="menu-card" data-menu="furo" onclick="selectMenu('furo')">
         <div class="check-mark">✓</div>
@@ -1051,7 +1080,8 @@
           </svg>
         </div>
         <div class="menu-name">風呂釜<br>洗浄</div>
-        <div class="menu-price">¥20,000〜</div>
+        <div class="menu-price">¥18,000〜</div>
+        <div class="bundle-badge">洗濯機・エアコンと一緒で<br><b>−¥5,000</b></div>
         <div style="font-size:10px;color:var(--light);margin-top:4px;">⏱ 約1.5時間</div>
       </div>
       <div class="menu-card" data-menu="aircon" onclick="selectMenu('aircon')">
@@ -1075,6 +1105,8 @@
       </div>
     </div>
 
+    <div id="furoBundleBanner" class="bundle-banner" style="display:none;"></div>
+
     <!-- 洗濯機タイプ選択 -->
     <div class="washer-type-area" id="washerTypeArea">
       <div class="sub-label">洗濯機の種類を選択してください</div>
@@ -1089,7 +1121,7 @@
         </button>
         <button class="type-btn" data-type="ドラム型" onclick="selectWasherType('ドラム型')">
           <div class="type-name">ドラム型</div>
-          <div class="type-price">¥30,000〜</div>
+          <div class="type-price">¥25,000〜</div>
         </button>
       </div>
 
@@ -1102,7 +1134,7 @@
           <div style="font-size:12px;font-weight:700;color:var(--sky-dark);margin-bottom:8px;">📋 基本クリーニング内容</div>
           <div id="drumMakerInfoContent" style="font-size:12px;color:var(--mid);line-height:1.9;"></div>
           <div style="margin-top:10px;padding:8px 10px;background:#FFF8E8;border-radius:6px;border-left:3px solid var(--accent);font-size:11px;color:#8B6200;line-height:1.7;">
-            ⚠️ 汚れや経年劣化により洗濯槽の分解が難しいものはお断りする場合がございます
+            ⚠️ 汚れや経年劣化によりドラム槽の分解が難しいものはお断りする場合がございます
           </div>
         </div>
       </div>
@@ -1116,16 +1148,18 @@
     <div class="price-table-wrap" id="priceTableWrap">
       <table>
         <tr><th colspan="2">洗濯機 分解清掃（ドラム型）</th></tr>
-        <tr><td>Panasonic VX/LX（乾燥機洗浄含む）</td><td>¥30,000</td></tr>
-        <tr><td>Panasonic VG/SD</td><td>¥30,000</td></tr>
-        <tr><td>HITACHI（乾燥経路清掃込み）</td><td>¥35,000</td></tr>
-        <tr><td>TOSHIBA</td><td>¥30,000</td></tr>
-        <tr><td>SHARP</td><td>¥30,000〜</td></tr>
+        <tr><td>Panasonic VX/LX ヒートポンプ式（乾燥機洗浄含む）</td><td>¥30,000</td></tr>
+        <tr><td>Panasonic VG/SD ヒーター式</td><td>¥25,000</td></tr>
+        <tr><td>HITACHI らくメンテ（ドラム槽抜き・乾燥経路清掃込み）</td><td>¥35,000</td></tr>
+        <tr><td>HITACHI（らくメンテを除く・ドラム槽抜き込み）</td><td>¥30,000</td></tr>
+        <tr><td>TOSHIBA（ドラム槽抜き込み）</td><td>¥30,000</td></tr>
+        <tr><td>SHARP</td><td>¥30,000</td></tr>
         <tr><th colspan="2">洗濯機 分解清掃（縦型）</th></tr>
         <tr><td>縦型（〜8kg）</td><td>¥20,000</td></tr>
         <tr><td>縦型（10kg〜）</td><td>¥23,000</td></tr>
         <tr><th colspan="2">風呂釜洗浄</th></tr>
-        <tr><td>1つ穴タイプ</td><td>¥20,000</td></tr>
+        <tr><td>1つ穴タイプ</td><td>¥18,000</td></tr>
+        <tr><td style="color:#E8503A;font-weight:700;">洗濯機・エアコンと同時のご依頼</td><td style="color:#E8503A;font-weight:800;">−¥5,000</td></tr>
         <tr><th colspan="2">エアコン 分解清掃</th></tr>
         <tr><td>ノーマル壁掛け</td><td>¥11,000〜</td></tr>
         <tr><td>お掃除機能付き壁掛け</td><td>¥16,000〜</td></tr>
@@ -1270,7 +1304,7 @@
     <div class="field-group">
       <label>ご住所 <span class="required">必須</span></label>
       <input type="text" id="address" placeholder="例：東京都渋谷区〇〇1-2-3 〇〇マンション101号" />
-      <div class="hint" style="margin-top:8px;">※川崎市高津区から半径30〜50kmは出張費¥4,000、半径50〜80kmは¥8,000、81km以上は要相談となります</div>
+      <div class="hint" style="margin-top:8px;">※出張費は高津区役所からの距離（Googleマップの下道ルート）で判定します。30km以内は無料、31〜50kmは+¥3,000、51〜80kmは+¥5,000、それ以上は要相談となります</div>
       <div class="error-msg" id="addressError">ご住所を入力してください</div>
     </div>
     <div class="field-group">
@@ -1413,7 +1447,7 @@
       LINEが自動で開かない場合は下のボタンをタップしてください
     </div>
 
-    <a href="https://lin.ee/9EohJY3" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:white;border-radius:10px;padding:16px;font-size:16px;font-weight:700;text-decoration:none;margin-top:16px;box-shadow:0 4px 16px rgba(6,199,85,0.3);">
+    <a href="https://lin.ee/69tgYH4" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:white;border-radius:10px;padding:16px;font-size:16px;font-weight:700;text-decoration:none;margin-top:16px;box-shadow:0 4px 16px rgba(6,199,85,0.3);">
       <span style="font-size:20px;">💬</span> LINEを開く
     </a>
   </div>
@@ -1440,7 +1474,7 @@ const state = {
   parking: null, elevator: null, paymentMethod: null, instaDiscount: null, referrerName: '', videoConsent: null, notes: ''
 };
 
-const LINE_URL = 'https://lin.ee/9EohJY3';
+const LINE_URL = 'https://lin.ee/69tgYH4';
 
 // =========================================
 // JSONBin 予約可否データの読み込み
@@ -1475,63 +1509,94 @@ async function loadRemoteSchedule() {
 // 洗濯機：ドラム型オプション
 const drumOptions = [
   {
-    id: 'd1', name: '洗濯槽分解洗浄', price: '+¥15,000', priceNum: 15000,
-    desc: '洗濯槽を完全に取り出して裏側まで徹底洗浄。カビ臭いお悩みの方におすすめ。対象：Panasonic / SHARPヒーター式',
+    id: 'd1', name: 'ドラム槽抜き洗浄', price: '+¥15,000', priceNum: 15000,
+    desc: 'ドラム槽を完全に取り出して裏側まで徹底洗浄。カビ臭いお悩みの方におすすめ。対象：Panasonic / SHARPヒーター式',
     makerIds: ['panasonic_vx','panasonic_vg','sharp_heater'],
+    conflictIds: ['d6'],
     duration: '+1時間',
     detailAnchor: 'drum',
   },
   {
-    id: 'd2a', name: '乾燥機洗浄（ヒーター式）', price: '+¥8,000', priceNum: 8000,
-    desc: 'Panasonic VG/SD・SHARPヒーター式対象。通常¥8,000 / 洗濯槽分解洗浄と同時選択で¥5,000（¥3,000off）',
-    dynamicPrice: true, discountIds: ['d1'], discountPrice: 5000,
-    makerIds: ['panasonic_vg','sharp_heater'],
+    id: 'd2a', name: '乾燥機洗浄', price: '+¥5,000〜¥15,000', priceNum: 15000,
+    desc: 'Panasonicヒーター式。通常+¥15,000 / ドラム槽抜き洗浄と同時なら+¥5,000（2つ合わせて+¥20,000）',
+    priceFn: (sel) => sel.includes('d1') ? 5000 : 15000,
+    makerIds: ['panasonic_vg'],
+    conflictIds: ['d6'],
     duration: '+1時間',
     detailAnchor: 'dryer',
   },
   {
-    id: 'd2b', name: '乾燥機洗浄（ヒートポンプ式）', price: '+¥15,000', priceNum: 15000,
-    desc: 'TOSHIBA・SHARPヒートポンプ式対象',
-    makerIds: ['toshiba','sharp_heatpump'],
+    id: 'd2', name: '乾燥機洗浄', price: '+¥15,000', priceNum: 15000,
+    desc: '乾燥機（ヒーター・ヒートポンプ）と乾燥経路の分解洗浄',
+    makerIds: ['hitachi','toshiba','sharp_heater','sharp_heatpump'],
+    conflictIds: ['d6'],
     duration: '+1時間',
     detailAnchor: 'dryer',
   },
-  { id: 'd_drain', name: '排水口清掃', price: '+¥3,300', priceNum: 3300, desc: '排水口の分解・清掃。詰まり防止・ヌメリ除去',
+  { id: 'd_drain', name: '排水口清掃', price: '+¥3,000', priceNum: 3000, desc: '排水口の分解・清掃。詰まり防止・ヌメリ除去。※設置状況によりお断りする場合があります',
     duration: '+10分',
     detailAnchor: 'pan',
   },
-  { id: 'd3', name: '洗濯パン・排水口清掃', price: '+¥4,000〜¥8,000', priceNum: 8000,
-    desc: '通常¥8,000 / 洗濯槽分解 or 乾燥機洗浄選択時は¥4,000',
-    dynamicPrice: true, discountIds: ['d1','d2a','d2b'], discountPrice: 4000,
+  { id: 'd3', name: '洗濯パン＆排水口清掃', price: '+¥8,000（セットで無料）', priceNum: 8000,
+    desc: '通常+¥8,000 / セットでのご依頼なら無料（Panasonicヒートポンプ式：ドラム槽抜き洗浄を選択、Panasonicヒーター式：ドラム槽抜き洗浄＋乾燥機洗浄を選択、その他メーカー：乾燥機洗浄を選択）',
+    priceFn: (sel, maker) => isPanFreeSet(sel, maker) ? 0 : 8000,
     duration: '+20分',
     detailAnchor: 'pan',
   },
-  { id: 'd4', name: 'ベルト・ホース交換【Panasonic限定】', price: '+¥5,000〜¥9,000', priceNum: 9000,
-    desc: '通常¥9,000 / 洗濯槽分解 or 乾燥機洗浄（ヒーター式）選択時は¥5,000',
-    dynamicPrice: true, discountIds: ['d1','d2a'], discountPrice: 5000,
+  { id: 'd4', name: 'ベルト・ホース交換【Panasonic限定】', price: '+¥3,000', priceNum: 3000,
+    desc: 'ベルト・ホースを新品に交換',
     makerIds: ['panasonic_vx','panasonic_vg'],
     detailAnchor: 'belt',
     detailAnchor2: 'hose',
   },
-  { id: 'd5', name: 'ヒートポンプ交換【Panasonic限定】', price: '+¥38,500', priceNum: 38500, desc: '乾燥機能を完全に改善',
+  { id: 'd_bolt', name: 'ボルト交換【TOSHIBA限定】', price: '+¥1,500', priceNum: 1500,
+    desc: 'ボルトを新品に交換',
+    makerIds: ['toshiba'],
+  },
+  { id: 'd5', name: 'ヒートポンプ交換【Panasonic限定】', price: '+¥33,000〜¥38,500', priceNum: 33000,
+    desc: '乾燥機（部分）を新品に交換。部品取り寄せのため、事前にお問い合わせください',
     makerIds: ['panasonic_vx','panasonic_vg'],
   },
   {
     id: 'd6', name: '🌟 乾燥力改善コース', price: '¥22,000', priceNum: 22000,
-    desc: '乾燥だけお悩みの方へ。乾燥機・乾燥経路に関わる箇所のみ分解清掃',
+    desc: '乾燥だけお悩みの方へ。ヒートポンプ（ヒーター）・乾燥ダクト・乾燥フィルターのみ洗浄',
     isSpecial: true,
-    specialNote: 'このコースを選ぶとドラム型の基本料金が ¥30,000 → ¥22,000 になります',
-    excludeMakerIds: ['hitachi'],
+    conflictIds: ['d1','d2a','d2'],
+    specialNote: 'このコースを選ぶとドラム式の基本料金の代わりに ¥22,000 になります',
+    excludeMakerIds: ['hitachi','hitachi_raku'],
     excludeNote: 'HITACHIは洗濯機の構造上、他メーカーと大きく異なるため選択できません',
-    duration: '2時間',
+    duration: '1〜2時間',
   },
   { id: 'd_note', name: '💡 当日汚れ状況を見てから検討可能', price: '', desc: '上記オプションは当日現場でご確認いただいてから追加いただけます。お気軽にご相談ください。', isNote: true },
 ];
 
+// 洗濯パン＆排水口清掃が無料になるセット条件
+function isPanFreeSet(sel, maker) {
+  if (sel.includes('d6')) return false;
+  if (maker === 'panasonic_vx') return sel.includes('d1');
+  if (maker === 'panasonic_vg') return sel.includes('d1') && sel.includes('d2a');
+  if (maker === 'hitachi_raku' || !maker) return false;
+  return sel.includes('d2');
+}
+
+// 同時に選べないオプション（乾燥力改善コース ⇔ ドラム槽抜き洗浄・乾燥機洗浄）
+function getConflictName(o, sel, opts) {
+  if (!o.conflictIds) return null;
+  const hit = o.conflictIds.find(id => sel.includes(id) && opts.some(x => x.id === id));
+  if (!hit) return null;
+  return o.id === 'd6' ? 'ドラム槽抜き洗浄・乾燥機洗浄' : '乾燥力改善コース';
+}
+
+// オプションの実際の金額（セット割を反映）
+function getOptionPriceNum(o, sel) {
+  if (o.priceFn) return o.priceFn(sel, state.drumMakerId);
+  return o.priceNum || 0;
+}
+
 // 洗濯機：縦型オプション
 const tateOptions = [
   { id: 't1', name: '乾燥機能付き', price: '+¥5,000', priceNum: 5000, desc: '乾燥機能付きの洗濯機が対象です' },
-  { id: 't2', name: '洗濯パン・排水口清掃', price: '+¥4,000', priceNum: 4000, desc: '洗濯パン、排水溝を清掃します' },
+  { id: 't2', name: '洗濯パン＆排水口清掃', price: '+¥8,000', priceNum: 8000, desc: '洗濯パン、排水口を清掃します' },
   {
     id: 't3', name: '嵩上げ台設置', price: '+¥7,000〜',
     desc: '5.5cm：+¥7,000 / 10.5cm：+¥8,000',
@@ -1555,7 +1620,7 @@ const furoOptions = [
 
 // エアコンオプション
 const airconOptions = [
-  { id: 'a1', name: '防カビ抗菌コートスプレー', price: '+¥3,000', priceNum: 3000, desc: 'カビ・菌の繁殖を長期間抑制' },
+  { id: 'a1', name: '防カビ抗菌コートスプレー', price: '無料', priceNum: 0, desc: 'カビ・菌の繁殖を長期間抑制（無料サービス）' },
   { id: 'a2', name: '室外機洗浄', price: '+¥4,000', priceNum: 4000, desc: '室外機フィンの高圧洗浄' },
   { id: 'a_note', name: '💡 当日汚れ状況を見てから検討可能', price: '', desc: '上記オプションは当日現場でご確認いただいてから追加いただけます。お気軽にご相談ください。', isNote: true },
 ];
@@ -1837,33 +1902,65 @@ function selectMenu(menu) {
   // 洗濯機が選択中なら縦型/ドラム選択を表示
   document.getElementById('washerTypeArea').classList.toggle('show', state.menus.includes('washer'));
   document.getElementById('menuError').classList.remove('show');
+  updateFuroBundleBanner();
+}
+
+function updateFuroBundleBanner() {
+  const el = document.getElementById('furoBundleBanner');
+  if (!el) return;
+  const hasFuro = state.menus.includes('furo');
+  const hasOther = state.menus.includes('washer') || state.menus.includes('aircon');
+  if (hasFuro && hasOther) {
+    el.className = 'bundle-banner applied';
+    el.innerHTML = '<div class="bundle-title">🎉 風呂釜セット割 適用中！</div>' +
+      '<div class="bundle-amount">風呂釜洗浄 <b>−¥5,000</b></div>';
+  } else if (hasOther) {
+    el.className = 'bundle-banner';
+    el.innerHTML = '<div class="bundle-title">🛁 風呂釜洗浄も一緒に頼むと</div>' +
+      '<div class="bundle-amount"><b>−¥5,000</b> おトク！</div>' +
+      '<div class="bundle-sub">同じ日にまとめて作業するので、その分お安くできます</div>' +
+      '<button type="button" class="bundle-btn" onclick="selectMenu(\'furo\')">＋ 風呂釜洗浄も追加する</button>';
+  } else if (hasFuro) {
+    el.className = 'bundle-banner';
+    el.innerHTML = '<div class="bundle-title">🫧 洗濯機・❄️ エアコンも一緒に頼むと</div>' +
+      '<div class="bundle-amount">風呂釜洗浄が <b>−¥5,000</b></div>' +
+      '<div class="bundle-sub">同じ日にまとめて作業するので、その分お安くできます</div>';
+  } else {
+    el.style.display = 'none';
+    return;
+  }
+  el.style.display = 'block';
 }
 
 // ドラム型メーカーデータ
 const drumMakers = [
   {
-    id: 'panasonic_vx', label: 'Panasonic VX/LX', price: 30000, priceLabel: '¥30,000', duration: '3時間',
-    info: '✓ 基本分解清掃\n✓ 乾燥機洗浄（標準含む）\n✗ 洗濯槽分解なし'
+    id: 'panasonic_vx', label: 'Panasonic VX/LX（ヒートポンプ式）', price: 30000, priceLabel: '¥30,000', duration: '3時間',
+    info: '✓ 基本分解清掃\n✓ 乾燥機洗浄（標準含む）\n✗ ドラム槽抜き洗浄なし（オプション¥15,000）'
   },
   {
-    id: 'panasonic_vg', label: 'Panasonic VG/SD', price: 30000, priceLabel: '¥30,000', duration: '3時間',
-    info: '✓ 基本分解清掃\n✗ 洗濯槽分解なし\n✗ 乾燥機洗浄なし（オプション¥8,000）'
+    id: 'panasonic_vg', label: 'Panasonic VG/SD（ヒーター式）', price: 25000, priceLabel: '¥25,000', duration: '3時間',
+    info: '✓ 基本分解清掃\n✗ ドラム槽抜き洗浄なし（オプション¥15,000）\n✗ 乾燥機洗浄なし（オプション¥15,000）\n※ 2つ合わせて+¥20,000（合計¥45,000）'
   },
   {
-    id: 'hitachi', label: 'HITACHI', price: 35000, priceLabel: '¥35,000', duration: '3.5時間',
-    info: '✓ 基本分解清掃\n✓ 洗濯槽分解込み\n✓ 乾燥経路清掃込み'
+    id: 'hitachi_raku', label: 'HITACHI らくメンテ', price: 35000, priceLabel: '¥35,000', duration: '3.5時間',
+    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✓ 乾燥経路清掃込み'
+  },
+  {
+    id: 'hitachi', label: 'HITACHI（らくメンテを除く）', price: 30000, priceLabel: '¥30,000', duration: '3.5時間',
+    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
   },
   {
     id: 'toshiba', label: 'TOSHIBA', price: 30000, priceLabel: '¥30,000', duration: '4時間',
-    info: '✓ 基本分解清掃\n✓ 洗濯槽分解込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
+    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
   },
   {
     id: 'sharp_heater', label: 'SHARPヒーター式', price: 30000, priceLabel: '¥30,000', duration: '3時間',
-    info: '✓ 基本分解清掃\n✗ 洗濯槽分解なし（オプション¥15,000）\n✗ 乾燥機洗浄なし（オプション¥8,000）'
+    info: '✓ 基本分解清掃\n✗ ドラム槽抜き洗浄なし（オプション¥15,000）\n✗ 乾燥機洗浄なし（オプション¥15,000）'
   },
   {
     id: 'sharp_heatpump', label: 'SHARPヒートポンプ式', price: 30000, priceLabel: '¥30,000', duration: '4時間',
-    info: '✓ 基本分解清掃\n✓ 一部機種のみ洗濯槽分解込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
+    info: '✓ 基本分解清掃\n✓ 一部機種のみドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
   },
 ];
 
@@ -1911,7 +2008,8 @@ function selectDrumMaker(id) {
   const washerOpts = state.optionsByMenu['washer'];
   if (washerOpts) {
     drumOptions.forEach(o => {
-      if (o.excludeMakerIds && o.excludeMakerIds.includes(id)) {
+      const notForMaker = o.makerIds && !o.makerIds.includes(id);
+      if ((o.excludeMakerIds && o.excludeMakerIds.includes(id)) || notForMaker) {
         const i = washerOpts.indexOf(o.id);
         if (i > -1) washerOpts.splice(i, 1);
       }
@@ -1947,7 +2045,11 @@ function selectDrumMaker(id) {
 // 見積もり計算
 // =========================================
 const washerTypeBasePrices = { '縦型〜8kg': 20000, '縦型10kg〜': 23000 };
-const furoBasePrice = 20000;
+const furoBasePrice = 18000;
+const FURO_BUNDLE_DISCOUNT = 5000; // 洗濯機・エアコンと同時依頼で風呂釜洗浄を割引
+function isFuroBundle() {
+  return state.menus.includes('furo') && (state.menus.includes('washer') || state.menus.includes('aircon'));
+}
 const menuNamesForPrice = { washer:'洗濯機 分解清掃', furo:'風呂釜洗浄', aircon:'エアコン 分解清掃' };
 
 function computeMenuBase(m) {
@@ -1982,12 +2084,7 @@ function computeMenuOptionsTotal(m) {
       if (sel && sel.priceNum != null) sum += sel.priceNum;
       return;
     }
-    if (o.dynamicPrice) {
-      const hasDiscount = o.discountIds.some(did => selectedIds.includes(did));
-      sum += hasDiscount ? o.discountPrice : o.priceNum;
-      return;
-    }
-    sum += o.priceNum || 0;
+    sum += getOptionPriceNum(o, selectedIds);
   });
   return sum;
 }
@@ -2000,15 +2097,17 @@ function computeGrandTotal() {
   });
   const subtotal = perMenu.reduce((s, x) => s + x.subtotal, 0);
   const instaDiscountAmount = state.instaDiscount === '希望する' ? 1000 : 0;
-  const total = Math.max(0, subtotal - instaDiscountAmount);
-  return { perMenu, subtotal, instaDiscountAmount, total };
+  const furoBundleAmount = isFuroBundle() ? FURO_BUNDLE_DISCOUNT : 0;
+  const total = Math.max(0, subtotal - instaDiscountAmount - furoBundleAmount);
+  return { perMenu, subtotal, instaDiscountAmount, furoBundleAmount, total };
 }
 
 function calcEstimate() {
   const bar = document.getElementById('totalBarAmount');
   if (bar) {
     const { total } = computeGrandTotal();
-    bar.innerHTML = '¥' + total.toLocaleString() + ' <small>〜（目安）</small>';
+    bar.innerHTML = '¥' + total.toLocaleString() + ' <small>〜（目安）</small>' +
+      (isFuroBundle() ? '<div class="bundle-chip">🛁 風呂釜セット割 <b>−¥5,000</b> 適用中</div>' : '');
   }
 }
 
@@ -2190,6 +2289,21 @@ function renderOptions() {
       const isSelected = selectedOpts.includes(o.id);
       const selClass = isSelected ? ' selected' : '';
 
+      // 同時に選べないオプションが選択中なら選択不可で表示
+      const conflictName = !isSelected && getConflictName(o, selectedOpts, opts);
+      if (conflictName) {
+        html += '<div class="option-item" style="opacity:0.5;cursor:not-allowed;border-color:var(--border);background:var(--bg);">';
+        html += '<div class="option-checkbox" style="border-color:var(--border);"></div>';
+        html += '<div class="option-info" style="width:100%;">';
+        html += '<div class="option-name" style="color:var(--mid);">' + o.name + '</div>';
+        html += '<div class="option-desc">' + desc + '</div>';
+        html += '<div style="margin-top:6px;padding:6px 10px;background:var(--bg);border:1px dashed var(--border);border-radius:6px;font-size:11px;color:var(--mid);font-weight:600;">🚫 ' + conflictName + 'と同時には選択できません</div>';
+        html += '</div>';
+        html += '<div class="option-price" style="color:var(--mid);white-space:nowrap;">' + o.price + '</div>';
+        html += '</div>';
+        return;
+      }
+
       // 特別コース（乾燥力改善コース）
       if (o.isSpecial) {
         const isExcluded = o.excludeMakerIds && o.excludeMakerIds.includes(state.drumMakerId);
@@ -2221,16 +2335,17 @@ function renderOptions() {
       }
 
       // 動的価格オプション
-      if (o.dynamicPrice) {
-        const hasDiscount = o.discountIds.some(function(id) { return selectedOpts.includes(id); });
-        const displayPrice = '+¥' + (hasDiscount ? o.discountPrice : o.priceNum).toLocaleString();
+      if (o.priceFn) {
+        const actual = getOptionPriceNum(o, selectedOpts);
+        const hasDiscount = actual < o.priceNum;
+        const displayPrice = actual === 0 ? '無料' : '+¥' + actual.toLocaleString();
         html += '<div class="option-item' + selClass + '" id="opt_' + o.id + '" onclick="toggleOption(\'' + o.id + '\')">';
         html += '<div class="option-checkbox' + selClass + '" id="chk_' + o.id + '">' + (isSelected ? '✓' : '') + '</div>';
         html += '<div class="option-info" style="width:100%;">';
         html += '<div class="option-name">' + o.name + '</div>';
         html += '<div class="option-desc">' + desc + '</div>';
         html += buildDetailLinkHtml(o);
-        if (hasDiscount) html += '<div style="margin-top:4px;padding:3px 8px;background:#E8F8EF;border-radius:4px;font-size:11px;color:#2E7D52;font-weight:600;display:inline-block;">✓ セット割適用中</div>';
+        if (hasDiscount) html += '<div style="margin-top:4px;padding:3px 8px;background:#E8F8EF;border-radius:4px;font-size:11px;color:#2E7D52;font-weight:600;display:inline-block;">' + (actual === 0 ? '✓ セットで無料' : '✓ セット割適用中') + '</div>';
         html += '</div>';
         html += '<div class="option-price" style="white-space:nowrap;">' + displayPrice + '</div>';
         html += '</div>';
@@ -2312,6 +2427,7 @@ function toggleOption(id) {
   if (opt.excludeMakerIds && opt.excludeMakerIds.includes(state.drumMakerId)) return;
 
   const idx = state.optionsByMenu[currentMenu].indexOf(id);
+  if (idx === -1 && getConflictName(opt, state.optionsByMenu[currentMenu], opts)) return;
 
   if (idx > -1) {
     state.optionsByMenu[currentMenu].splice(idx, 1);
@@ -2419,7 +2535,10 @@ function renderConfirm() {
       const o = opts.find(o => o.id === id);
       if (!o) return null;
       const maker = makerSels[id];
-      return maker ? `${o.name}（${maker.label}・${maker.price}）` : `${o.name}（${o.price}）`;
+      if (maker) return `${o.name}（${maker.label}・${maker.price}）`;
+      if (o.isSpecial || o.isNote) return `${o.name}（${o.price}）`;
+      const n = getOptionPriceNum(o, selectedIds);
+      return `${o.name}（${n === 0 ? '無料' : '+¥' + n.toLocaleString()}）`;
     }).filter(Boolean);
     const airconTypeNames = m === 'aircon' && state.airconCounts
       ? airconTypes.filter(t => (state.airconCounts[t.id] || 0) > 0)
@@ -2437,14 +2556,16 @@ function renderConfirm() {
   }).join('');
 
   // 料金内訳
-  const { perMenu, subtotal, instaDiscountAmount, total } = computeGrandTotal();
+  const { perMenu, subtotal, instaDiscountAmount, furoBundleAmount, total } = computeGrandTotal();
   const breakdownRows = perMenu.map(x => `
     <div class="price-row"><div>${x.label}（基本料金）</div><div>¥${x.base.toLocaleString()}</div></div>
     ${x.options > 0 ? `<div class="price-row sub"><div>オプション合計</div><div>+¥${x.options.toLocaleString()}</div></div>` : ''}
   `).join('');
-  const discountRow = instaDiscountAmount > 0
+  const discountRow = (furoBundleAmount > 0
+    ? `<div class="price-row discount"><div>🛁 風呂釜セット割（同時依頼）</div><div>−¥${furoBundleAmount.toLocaleString()}</div></div>`
+    : '') + (instaDiscountAmount > 0
     ? `<div class="price-row discount"><div>インスタ投稿割</div><div>−¥${instaDiscountAmount.toLocaleString()}</div></div>`
-    : '';
+    : '');
   const priceBreakdownHtml = `
     <div class="price-breakdown">
       <div class="price-breakdown-head">💰 お見積り金額（目安）</div>
@@ -2453,7 +2574,7 @@ function renderConfirm() {
       <div class="price-row total"><div>合計金額（目安）</div><div>¥${total.toLocaleString()}</div></div>
       <div class="price-note-box">
         ※ 現場の汚れ状況により、当日追加オプションをご提案する場合があります（その場合は事前にご説明します）<br>
-        ※ 川崎市高津区から半径30km超の場合、別途出張費（¥4,000〜）が加算されます<br>
+        ※ 高津区役所から下道で30km超の場合、別途出張費（¥3,000〜）が加算されます<br>
         ※ 紹介者割は内容確認のうえ別途ご案内します${state.referrerName ? `（紹介者：${state.referrerName}）` : ''}
       </div>
     </div>
@@ -2508,7 +2629,7 @@ async function submitToLine(e) {
       const washerMaker = m === 'washer' && state.drumMakerLabel ? `・${state.drumMakerLabel}` : '';
       const subType = washerType ? `（${washerType}${washerMaker}）` : (airconTypeNames ? `（${airconTypeNames}）` : '');
       return `${menuNames[m]}${subType}${optNames.length ? '／' + optNames.join('・') : ''}`;
-    }).join('\n');
+    }).join('\n') + (isFuroBundle() ? '\n風呂釜セット割：−¥5,000' : '');
 
     const { total } = computeGrandTotal();
     const referrerDiscountTotal = Math.round(total * 0.9);
