@@ -663,9 +663,10 @@
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxib47rz1tSJaI11A8jKn9omSPoByn4JTQC540PXR2q_xhy5SassPW1tKfEu_5_1z1d/exec';
 
 // =========================================
-// パスワード設定 ← ここを変更してください
+// パスワードはGoogleのスクリプト側（スクリプト プロパティ）で確認します。
+// このページには書きません。
 // =========================================
-const ADMIN_PASSWORD = 'ohzuru5382';
+let adminKey = null; // ログイン中だけ保持（保存しない）
 
 // =========================================
 // ストレージキー
@@ -683,19 +684,41 @@ let selectedOpt = 'available';
 // =========================================
 // Login
 // =========================================
-function doLogin() {
+async function doLogin() {
   const pw = document.getElementById('pwInput').value;
-  if (pw === ADMIN_PASSWORD) {
-    document.getElementById('loginWrap').style.display = 'none';
-    document.getElementById('adminWrap').style.display = 'block';
-    initAdmin();
-  } else {
+  if (!pw) return;
+  showLoading(true);
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'adminLoad', key: pw })
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      adminKey = pw;
+      schedule = data.schedule || {};
+      allBookings = data.bookings || [];
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('adminWrap').style.display = 'block';
+      initAdmin();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('pwInput').value = '';
+    }
+  } catch (e) {
+    document.getElementById('loginError').textContent = '通信エラーです。時間をおいて再度お試しください';
     document.getElementById('loginError').style.display = 'block';
-    document.getElementById('pwInput').value = '';
+  } finally {
+    showLoading(false);
   }
 }
 
 function doLogout() {
+  adminKey = null;
+  schedule = {};
+  allBookings = [];
+  document.getElementById('bookingList').innerHTML = '';
   document.getElementById('loginWrap').style.display = 'flex';
   document.getElementById('adminWrap').style.display = 'none';
   document.getElementById('pwInput').value = '';
@@ -704,55 +727,41 @@ function doLogout() {
 // =========================================
 // Init
 // =========================================
-async function initAdmin() {
+function initAdmin() {
   const now = new Date();
   calYear = now.getFullYear();
   calMonth = now.getMonth();
-  await loadSchedule();
+  renderBookings();
+  renderCalendar();
+  updateStats();
 }
 
 // =========================================
 // Storage（JSONBin）
 // =========================================
-async function loadSchedule() {
-  try {
-    showLoading(true);
-    const res = await fetch(GAS_URL);
-    const data = await res.json();
-    schedule = data.schedule || {};
-    allBookings = data.bookings || [];
-    renderBookings();
-  } catch(e) {
-    console.warn('JSONBin読み込み失敗、ローカルから復元:', e);
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      schedule = raw ? JSON.parse(raw) : {};
-    } catch(e2) { schedule = {}; }
-  } finally {
-    showLoading(false);
-    renderCalendar();
-    updateStats();
-  }
-}
+// 以前この端末に保存していた予約データ（個人情報）を消去
+try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
 
 async function saveSchedule() {
+  if (!adminKey) return;
   try {
     showSaving(true);
     const res = await fetch(GAS_URL, {
       method: 'POST',
-      body: JSON.stringify({ schedule, bookings: allBookings })
+      body: JSON.stringify({ action: 'adminSave', key: adminKey, schedule, bookings: allBookings })
     });
     const data = await res.json();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ schedule, bookings: allBookings }));
     showSaving(false);
     if (data.status === 'ok') {
       showSaveStatus('✅ 保存しました（クラウド同期済み）');
+    } else if (data.status === 'unauthorized') {
+      showSaveStatus('⚠️ ログインし直してください');
+      doLogout();
     } else {
       showSaveStatus('⚠️ 保存失敗：' + JSON.stringify(data));
     }
   } catch(e) {
     showSaving(false);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ schedule, bookings: allBookings }));
     showSaveStatus('⚠️ エラー：' + e.message);
   }
 }
@@ -958,6 +967,13 @@ function copyUrl() {
 let allBookings = [];
 let currentFilter = 'all';
 
+// 予約内容に含まれる記号をそのまま文字として表示する（不正なコードの実行を防ぐ）
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 function renderBookings() {
   const list = document.getElementById('bookingList');
   const filtered = currentFilter === 'all'
@@ -970,32 +986,32 @@ function renderBookings() {
   }
 
   list.innerHTML = filtered.map(b => `
-    <div class="booking-item" id="booking_${b.id}">
+    <div class="booking-item" id="booking_${Number(b.id)}">
       <div class="booking-header">
         <div>
-          <div class="booking-name">👤 ${b.name}　様</div>
-          <div class="booking-date">申込：${b.createdAt}</div>
+          <div class="booking-name">👤 ${esc(b.name)}　様</div>
+          <div class="booking-date">申込：${esc(b.createdAt)}</div>
         </div>
-        <div class="status-badge status-${b.status}" onclick="cycleStatus(${b.id})">${b.status}</div>
+        <div class="status-badge status-${esc(b.status)}" onclick="cycleStatus(${Number(b.id)})">${esc(b.status)}</div>
       </div>
       <div class="booking-info">
-        <strong>メニュー</strong>：${b.menus.replace(/\n/g, '<br>')}<br>
-        <strong>希望日時</strong>：${b.dates}<br>
-        <strong>電話番号</strong>：${b.phone}<br>
-        <strong>住所</strong>：${b.address}<br>
-        <strong>お支払い</strong>：${b.paymentMethod || '－'}　<strong>駐車場</strong>：${b.parking}　<strong>EV</strong>：${b.elevator}
-        <br><strong>インスタ投稿割</strong>：${b.instaDiscount || '－'}　<strong>紹介者割</strong>：${b.referrerName || '－'}　<strong>動画SNS投稿</strong>：${b.videoConsent || '－'}
-        ${b.total != null ? `<br><strong>合計金額（目安）</strong>：¥${b.total.toLocaleString()}` : ''}
-        ${b.referrerName && b.referrerDiscountTotal != null ? `<br><strong style="color:#2E7D52;">紹介者割10%適用時</strong>：¥${b.referrerDiscountTotal.toLocaleString()}<span style="color:#B07800;">（実施の場合は紹介者の過去依頼実績を確認してから適用）</span>` : ''}
-        ${b.notes ? `<br><strong>ご要望</strong>：${b.notes}` : ''}
+        <strong>メニュー</strong>：${esc(b.menus).replace(/\n/g, '<br>')}<br>
+        <strong>希望日時</strong>：${esc(b.dates)}<br>
+        <strong>電話番号</strong>：${esc(b.phone)}<br>
+        <strong>住所</strong>：${esc(b.address)}<br>
+        <strong>お支払い</strong>：${esc(b.paymentMethod) || '－'}　<strong>駐車場</strong>：${esc(b.parking)}　<strong>EV</strong>：${esc(b.elevator)}
+        <br><strong>インスタ投稿割</strong>：${esc(b.instaDiscount) || '－'}　<strong>紹介者割</strong>：${esc(b.referrerName) || '－'}　<strong>動画SNS投稿</strong>：${esc(b.videoConsent) || '－'}
+        ${b.total != null ? `<br><strong>合計金額（目安）</strong>：¥${Number(b.total).toLocaleString()}` : ''}
+        ${b.referrerName && b.referrerDiscountTotal != null ? `<br><strong style="color:#2E7D52;">紹介者割10%適用時</strong>：¥${Number(b.referrerDiscountTotal).toLocaleString()}<span style="color:#B07800;">（実施の場合は紹介者の過去依頼実績を確認してから適用）</span>` : ''}
+        ${b.notes ? `<br><strong>ご要望</strong>：${esc(b.notes)}` : ''}
       </div>
       <div class="booking-actions">
-        <button class="status-btn" onclick="setStatus(${b.id},'未確認')">未確認</button>
-        <button class="status-btn" onclick="setStatus(${b.id},'確認済み')">確認済み</button>
-        <button class="status-btn" onclick="setStatus(${b.id},'予約確定')">予約確定</button>
-        <button class="status-btn" onclick="setStatus(${b.id},'完了')">完了</button>
-        <button class="status-btn" onclick="setStatus(${b.id},'キャンセル')">キャンセル</button>
-        <button class="delete-btn" onclick="deleteBooking(${b.id})">🗑 削除</button>
+        <button class="status-btn" onclick="setStatus(${Number(b.id)},'未確認')">未確認</button>
+        <button class="status-btn" onclick="setStatus(${Number(b.id)},'確認済み')">確認済み</button>
+        <button class="status-btn" onclick="setStatus(${Number(b.id)},'予約確定')">予約確定</button>
+        <button class="status-btn" onclick="setStatus(${Number(b.id)},'完了')">完了</button>
+        <button class="status-btn" onclick="setStatus(${Number(b.id)},'キャンセル')">キャンセル</button>
+        <button class="delete-btn" onclick="deleteBooking(${Number(b.id)})">🗑 削除</button>
       </div>
     </div>
   `).join('');
@@ -1038,13 +1054,7 @@ function deleteBooking(id) {
 }
 
 async function saveBookings() {
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ schedule, bookings: allBookings })
-    });
-    showSaveStatus();
-  } catch(e) { console.warn('予約保存エラー:', e); }
+  await saveSchedule();
 }
 </script>
 </body>

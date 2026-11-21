@@ -2689,15 +2689,10 @@ async function submitToLine(e) {
       referrerDiscountTotal: referrerDiscountTotal,
     };
 
-    // 既存の予約一覧を取得して追加
-    const res = await fetch(GAS_URL);
-    const current = await res.json();
-    const bookings = current.bookings || [];
-    bookings.unshift(booking);
-
+    // 新しい予約を1件だけ送る（他のお客様の予約は読み込まない）
     await fetch(GAS_URL, {
       method: 'POST',
-      body: JSON.stringify({ schedule: current.schedule || {}, bookings })
+      body: JSON.stringify({ action: 'book', booking })
     });
   } catch(e) {
     console.warn('予約保存エラー:', e);
