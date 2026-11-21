@@ -1253,8 +1253,8 @@
         ▶ <span id="timePickerDateLabel"></span> の時間帯を選択
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <div class="time-slot" id="slot_9" style="flex:1;min-width:90px;" onclick="selectTimeSlot('9:00〜')">
-          🌅 午前スタート<br><strong>9:00〜</strong>
+        <div class="time-slot" id="slot_9" style="flex:1;min-width:90px;" onclick="selectTimeSlot('8:30〜')">
+          🌅 午前スタート<br><strong>8:30〜</strong>
         </div>
         <div class="time-slot" id="slot_14" style="flex:1;min-width:90px;" onclick="selectTimeSlot('14:00〜')">
           🌇 午後スタート<br><strong>14:00〜</strong>
@@ -1264,7 +1264,7 @@
         </div>
       </div>
       <div class="error-msg" id="timeSlotError">時間帯を選択してください</div>
-      <div class="hint" style="margin-top:6px;">※ 確定時刻はLINEにてご連絡します</div>
+      <div class="hint" style="margin-top:6px;">※ 作業開始時間は、前後のご予約状況により変動する場合がございます。<br>※ 確定時刻はLINEにてご連絡します</div>
     </div>
 
     <div class="selected-dates" id="selectedDatesBox" style="display:none;">
@@ -1686,12 +1686,12 @@ const unavailableDates = [
   '2026-05-31',
 ];
 
-// 9:00〜のみ不可の日（14:00〜は予約可能）
+// 8:30〜のみ不可の日（14:00〜は予約可能）
 const unavailable9 = [
   // 例: '2026-05-14',
 ];
 
-// 14:00〜のみ不可の日（9:00〜は予約可能）
+// 14:00〜のみ不可の日（8:30〜は予約可能）
 const unavailable14 = [
   // 例: '2026-05-15',
 ];
@@ -1804,7 +1804,7 @@ function onDateClick(dateStr, d, el) {
     slot9.classList.remove('unavailable-slot');
     slot9.style.opacity = '1';
     slot9.style.cursor = 'pointer';
-    slot9.onclick = () => selectTimeSlot('9:00〜');
+    slot9.onclick = () => selectTimeSlot('8:30〜');
   }
   if (unavailable14.includes(dateStr)) {
     slot14.classList.add('unavailable-slot');

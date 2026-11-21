@@ -219,7 +219,7 @@
   }
   .cal-cell.off-all::after { content: '✕'; font-size: 10px; position: absolute; bottom: 2px; right: 3px; }
 
-  /* 9:00〜のみ不可 */
+  /* 8:30〜のみ不可 */
   .cal-cell.off-9 {
     background: var(--partial9);
     border-color: var(--partial9-border);
@@ -579,7 +579,7 @@
         <div class="legend">
           <div class="legend-item"><div class="legend-dot available"></div>予約可能</div>
           <div class="legend-item"><div class="legend-dot off-all"></div>全日不可</div>
-          <div class="legend-item"><div class="legend-dot off-9"></div>午前（9:00〜）不可</div>
+          <div class="legend-item"><div class="legend-dot off-9"></div>午前（8:30〜）不可</div>
           <div class="legend-item"><div class="legend-dot off-14"></div>午後（14:00〜）不可</div>
         </div>
         <div class="bulk-section">
@@ -640,7 +640,7 @@
         <span class="modal-icon">❌</span> 全日予約不可
       </div>
       <div class="modal-option" id="opt-off-9" onclick="selectOpt('off-9')">
-        <span class="modal-icon">🌅</span> 午前（9:00〜）のみ不可
+        <span class="modal-icon">🌅</span> 午前（8:30〜）のみ不可
       </div>
       <div class="modal-option" id="opt-off-14" onclick="selectOpt('off-14')">
         <span class="modal-icon">🌇</span> 午後（14:00〜）のみ不可
