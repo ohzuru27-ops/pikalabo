@@ -1036,6 +1036,10 @@
 <div class="main">
 
 <!-- STEP 1: メニュー選択 -->
+<div id="hpBanner" style="display:none;margin:0 0 14px;padding:12px 16px;background:#E8F8EF;border:2px solid #2E7D52;border-radius:12px;color:#1F5C3B;font-size:14px;line-height:1.6;">
+  🎁 <b>ホームページ限定割 適用中：¥3,000off</b><br>
+  <span style="font-size:12px;">お見積りの合計金額から自動で差し引きます。※インスタ投稿割と併用OK／紹介者割との併用はできません</span>
+</div>
 <div id="step1" class="section-card">
   <div class="section-header">
     <div class="section-icon">🧹</div>
@@ -1330,6 +1334,7 @@
     <div class="field-group">
       <label>インスタ投稿割 <span class="optional">任意</span></label>
       <div class="hint" style="margin-bottom:8px;">お客様のInstagramで、作業中の写真または動画をストーリーに投稿（@pikalaboをメンション）していただくと¥1,000offになります。鍵アカウントでも対象です。</div>
+      <div class="hint hp-only-note" style="display:none;margin-bottom:8px;color:#2E7D52;font-weight:600;">🎁 ホームページ限定割（¥3,000off）と併用できます。</div>
       <div class="radio-group">
         <div class="radio-btn" onclick="selectRadio('instaDiscount', '希望する', this)">希望する（¥1,000off）</div>
         <div class="radio-btn" onclick="selectRadio('instaDiscount', '希望しない', this)">希望しない</div>
@@ -1338,6 +1343,7 @@
     <div class="field-group">
       <label>紹介者割 <span class="optional">任意</span></label>
       <div class="hint" style="margin-bottom:8px;">ご紹介者様がいらっしゃる場合は、フルネームまたはアカウント名をご記入ください。</div>
+      <div class="hint hp-only-note" style="display:none;margin-bottom:8px;color:#2E7D52;font-weight:600;">🎁 ホームページ限定割とは併用できません。紹介者割（作業料金の10%off）とお得な方を適用します。</div>
       <input type="text" id="referrerName" placeholder="例：山田 太郎　／　Instagram：@example" oninput="state.referrerName = this.value" />
     </div>
     <div class="field-group">
@@ -2121,6 +2127,15 @@ function computeMenuOptionsTotal(m) {
   return sum;
 }
 
+// ホームページ（pikalabo.jp）から来たお客様：?from=hp
+const HP_DISCOUNT = 3000;
+const FROM_HP = (() => {
+  try {
+    if (new URLSearchParams(location.search).get('from') === 'hp') { sessionStorage.setItem('pk_from', 'hp'); return true; }
+    return sessionStorage.getItem('pk_from') === 'hp';
+  } catch (e) { return new URLSearchParams(location.search).get('from') === 'hp'; }
+})();
+
 function computeGrandTotal() {
   const perMenu = state.menus.map(m => {
     const base = computeMenuBase(m);
@@ -2128,10 +2143,12 @@ function computeGrandTotal() {
     return { menu: m, label: menuNamesForPrice[m], base, options, subtotal: base + options };
   });
   const subtotal = perMenu.reduce((s, x) => s + x.subtotal, 0);
+  const hpDiscountAmount = (FROM_HP && subtotal > 0) ? HP_DISCOUNT : 0;
+  // ホームページ限定割はインスタ投稿割と併用OK（紹介者割とは併用不可）
   const instaDiscountAmount = state.instaDiscount === '希望する' ? 1000 : 0;
   const furoBundleAmount = isFuroBundle() ? FURO_BUNDLE_DISCOUNT : 0;
-  const total = Math.max(0, subtotal - instaDiscountAmount - furoBundleAmount);
-  return { perMenu, subtotal, instaDiscountAmount, furoBundleAmount, total };
+  const total = Math.max(0, subtotal - hpDiscountAmount - instaDiscountAmount - furoBundleAmount);
+  return { perMenu, subtotal, hpDiscountAmount, instaDiscountAmount, furoBundleAmount, total };
 }
 
 function calcEstimate() {
@@ -2139,7 +2156,8 @@ function calcEstimate() {
   if (bar) {
     const { total } = computeGrandTotal();
     bar.innerHTML = '¥' + total.toLocaleString() + ' <small>〜（目安）</small>' +
-      (isFuroBundle() ? '<div class="bundle-chip">🛁 風呂釜セット割 <b>−¥5,000</b> 適用中</div>' : '');
+      (isFuroBundle() ? '<div class="bundle-chip">🛁 風呂釜セット割 <b>−¥5,000</b> 適用中</div>' : '') +
+      (FROM_HP && total > 0 ? '<div class="bundle-chip">🎁 ホームページ限定割 <b>−¥3,000</b> 適用中</div>' : '');
   }
 }
 
@@ -2609,12 +2627,14 @@ function renderConfirm() {
   }).join('');
 
   // 料金内訳
-  const { perMenu, subtotal, instaDiscountAmount, furoBundleAmount, total } = computeGrandTotal();
+  const { perMenu, subtotal, hpDiscountAmount, instaDiscountAmount, furoBundleAmount, total } = computeGrandTotal();
   const breakdownRows = perMenu.map(x => `
     <div class="price-row"><div>${x.label}（基本料金）</div><div>¥${x.base.toLocaleString()}</div></div>
     ${x.options > 0 ? `<div class="price-row sub"><div>オプション合計</div><div>+¥${x.options.toLocaleString()}</div></div>` : ''}
   `).join('');
-  const discountRow = (furoBundleAmount > 0
+  const discountRow = (hpDiscountAmount > 0
+    ? `<div class="price-row discount"><div>🎁 ホームページ限定割</div><div>−¥${hpDiscountAmount.toLocaleString()}</div></div>`
+    : '') + (furoBundleAmount > 0
     ? `<div class="price-row discount"><div>🛁 風呂釜セット割（同時依頼）</div><div>−¥${furoBundleAmount.toLocaleString()}</div></div>`
     : '') + (instaDiscountAmount > 0
     ? `<div class="price-row discount"><div>インスタ投稿割</div><div>−¥${instaDiscountAmount.toLocaleString()}</div></div>`
@@ -2628,7 +2648,7 @@ function renderConfirm() {
       <div class="price-note-box">
         ※ 現場の汚れ状況により、当日追加オプションをご提案する場合があります（その場合は事前にご説明します）<br>
         ※ 高津区役所から30km超の場合、別途出張費（¥3,000〜）が加算されます<br>
-        ※ 紹介者割は内容確認のうえ別途ご案内します${state.referrerName ? `（紹介者：${state.referrerName}）` : ''}
+        ※ 紹介者割は内容確認のうえ別途ご案内します${state.referrerName ? `（紹介者：${state.referrerName}）` : ''}${hpDiscountAmount > 0 ? `<br>※ ホームページ限定割は紹介者割と併用できません。紹介者割をご利用の場合は、お得な方を適用します` : ''}
       </div>
     </div>
   `;
@@ -2684,8 +2704,10 @@ async function submitToLine(e) {
       return `${menuNames[m]}${subType}${optNames.length ? '／' + optNames.join('・') : ''}`;
     }).join('\n') + (isFuroBundle() ? '\n風呂釜セット割：−¥5,000' : '');
 
-    const { total } = computeGrandTotal();
-    const referrerDiscountTotal = Math.round(total * 0.9);
+    const { total, hpDiscountAmount } = computeGrandTotal();
+    // 紹介者割10%は割引前（ホームページ限定割を除いた）金額で計算
+    const referrerDiscountTotal = Math.round((total + hpDiscountAmount) * 0.9);
+    const menuSummaryAll = menuSummary + (hpDiscountAmount > 0 ? '\nホームページ限定割：−¥3,000（紹介者割とはお得な方を適用）' : '');
 
     const booking = {
       id: Date.now(),
@@ -2701,7 +2723,7 @@ async function submitToLine(e) {
       parking: state.parking,
       elevator: state.elevator,
       notes: state.notes || '',
-      menus: menuSummary,
+      menus: menuSummaryAll,
       dates: state.dates.map((d,i) => `第${i+1}希望：${d.label}`).join('／'),
       total: total,
       referrerDiscountTotal: referrerDiscountTotal,
@@ -2784,6 +2806,13 @@ document.getElementById('linePopup').addEventListener('click', function(e) {
 const style = document.createElement('style');
 style.textContent = '#linePopup.show { display: flex !important; }';
 document.head.appendChild(style);
+</script>
+<script>
+if (FROM_HP) {
+  document.getElementById('hpBanner').style.display = 'block';
+  document.querySelectorAll('.hp-only-note').forEach(el => el.style.display = 'block');
+  if (typeof calcEstimate === 'function') calcEstimate();
+}
 </script>
 </body>
 </html>
