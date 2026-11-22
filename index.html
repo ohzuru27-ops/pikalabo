@@ -1163,7 +1163,8 @@
         <tr><td>HITACHI らくメンテ（ドラム槽抜き・乾燥経路清掃込み）</td><td>¥35,000</td></tr>
         <tr><td>HITACHI（らくメンテを除く・ドラム槽抜き込み）</td><td>¥30,000</td></tr>
         <tr><td>TOSHIBA（ドラム槽抜き込み）</td><td>¥30,000</td></tr>
-        <tr><td>SHARP</td><td>¥30,000</td></tr>
+        <tr><td>SHARP ヒーター式</td><td>¥25,000</td></tr>
+        <tr><td>SHARP ヒートポンプ式</td><td>¥30,000</td></tr>
         <tr><th colspan="2">洗濯機 分解清掃（縦型）</th></tr>
         <tr><td>縦型（〜8kg）</td><td>¥20,000</td></tr>
         <tr><td>縦型（10kg〜）</td><td>¥23,000</td></tr>
@@ -1176,7 +1177,7 @@
         <tr><td>天井埋め込み</td><td>¥18,000〜</td></tr>
         <tr><td>業務用エアコン4方向</td><td>¥25,000〜</td></tr>
       </table>
-      <div class="price-note">※ 料金はすべて税込です。詳細はLINEにてご確認ください。</div>
+      <div class="price-note">※ 料金はすべて税込です。詳細はLINEにてご確認ください。<br>※ ドラム槽抜き込みのメーカーで、分解してドラムがきれいな場合は、ドラム槽抜きを無しにすると −¥5,000 になります。</div>
     </div>
 
     <div class="error-msg" id="menuError">メニューをお選びください</div>
@@ -1519,6 +1520,10 @@ async function loadRemoteSchedule() {
 // 洗濯機：ドラム型オプション
 const drumOptions = [
   {
+    id: 'd_decide', name: '🤝 当日オプションを判断したい', price: '当日ご相談', priceNum: 0, decideLater: true,
+    desc: 'どのオプションが必要か分からない方はこちらを選んでください。当日、分解した汚れの状態を一緒に確認してから、本当に必要なものだけをご提案します。不要なオプションをおすすめすることはありません。',
+  },
+  {
     id: 'd1', name: 'ドラム槽抜き洗浄', price: '+¥15,000', priceNum: 15000,
     desc: 'ドラム槽を完全に取り出して裏側まで徹底洗浄。カビ臭いお悩みの方におすすめ。対象：Panasonic / SHARPヒーター式',
     makerIds: ['panasonic_vx','panasonic_vg','sharp_heater'],
@@ -1528,9 +1533,9 @@ const drumOptions = [
   },
   {
     id: 'd2a', name: '乾燥機洗浄', price: '+¥5,000〜¥15,000', priceNum: 15000,
-    desc: 'Panasonicヒーター式。通常+¥15,000 / ドラム槽抜き洗浄と同時なら+¥5,000（2つ合わせて+¥20,000）',
+    desc: 'ヒーター式（Panasonic VG/SD・SHARP）。通常+¥15,000 / ドラム槽抜き洗浄と同時なら+¥5,000（2つ合わせて+¥20,000）',
     priceFn: (sel) => sel.includes('d1') ? 5000 : 15000,
-    makerIds: ['panasonic_vg'],
+    makerIds: ['panasonic_vg','sharp_heater'],
     conflictIds: ['d6'],
     duration: '+1時間',
     detailAnchor: 'dryer',
@@ -1538,7 +1543,7 @@ const drumOptions = [
   {
     id: 'd2', name: '乾燥機洗浄', price: '+¥15,000', priceNum: 15000,
     desc: '乾燥機（ヒーター・ヒートポンプ）と乾燥経路の分解洗浄',
-    makerIds: ['hitachi','toshiba','sharp_heater','sharp_heatpump'],
+    makerIds: ['hitachi','toshiba','sharp_heatpump'],
     conflictIds: ['d6'],
     duration: '+1時間',
     detailAnchor: 'dryer',
@@ -1548,7 +1553,7 @@ const drumOptions = [
     detailAnchor: 'pan',
   },
   { id: 'd3', name: '洗濯パン＆排水口清掃', price: '+¥8,000（セットで無料）', priceNum: 8000,
-    desc: '通常+¥8,000 / セットでのご依頼なら無料（Panasonicヒートポンプ式：ドラム槽抜き洗浄を選択、Panasonicヒーター式：ドラム槽抜き洗浄＋乾燥機洗浄を選択、その他メーカー：乾燥機洗浄を選択）',
+    desc: '通常+¥8,000 / セットでのご依頼なら無料（Panasonicヒートポンプ式：ドラム槽抜き洗浄を選択、ヒーター式（Panasonic VG/SD・SHARP）：ドラム槽抜き洗浄＋乾燥機洗浄を選択、その他メーカー：乾燥機洗浄を選択。HITACHIらくメンテは対象外）',
     priceFn: (sel, maker) => isPanFreeSet(sel, maker) ? 0 : 8000,
     duration: '+20分',
     detailAnchor: 'pan',
@@ -1585,14 +1590,13 @@ const drumOptions = [
     excludeNote: 'HITACHIは洗濯機の構造上、他メーカーと大きく異なるため選択できません',
     duration: '1〜2時間',
   },
-  { id: 'd_note', name: '💡 当日汚れ状況を見てから検討可能', price: '', desc: '上記オプションは当日現場でご確認いただいてから追加いただけます。お気軽にご相談ください。', isNote: true },
 ];
 
 // 洗濯パン＆排水口清掃が無料になるセット条件
 function isPanFreeSet(sel, maker) {
   if (sel.includes('d6')) return false;
   if (maker === 'panasonic_vx') return sel.includes('d1');
-  if (maker === 'panasonic_vg') return sel.includes('d1') && sel.includes('d2a');
+  if (maker === 'panasonic_vg' || maker === 'sharp_heater') return sel.includes('d1') && sel.includes('d2a');
   if (maker === 'hitachi_raku' || !maker) return false;
   return sel.includes('d2');
 }
@@ -1972,23 +1976,23 @@ const drumMakers = [
   },
   {
     id: 'hitachi_raku', label: 'HITACHI らくメンテ', price: 35000, priceLabel: '¥35,000', duration: '3.5時間',
-    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✓ 乾燥経路清掃込み'
+    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✓ 乾燥経路清掃込み\n✗ 洗濯パン＆排水口清掃の無料セットは対象外\n※ 分解してドラムがきれいな場合、ドラム槽抜きを無しにすると −¥5,000'
   },
   {
     id: 'hitachi', label: 'HITACHI（らくメンテを除く）', price: 30000, priceLabel: '¥30,000', duration: '3.5時間',
-    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
+    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）\n※ 分解してドラムがきれいな場合、ドラム槽抜きを無しにすると −¥5,000'
   },
   {
     id: 'toshiba', label: 'TOSHIBA', price: 30000, priceLabel: '¥30,000', duration: '4時間',
-    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
+    info: '✓ 基本分解清掃\n✓ ドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）\n※ 分解してドラムがきれいな場合、ドラム槽抜きを無しにすると −¥5,000'
   },
   {
-    id: 'sharp_heater', label: 'SHARPヒーター式', price: 30000, priceLabel: '¥30,000', duration: '3時間',
-    info: '✓ 基本分解清掃\n✗ ドラム槽抜き洗浄なし（オプション¥15,000）\n✗ 乾燥機洗浄なし（オプション¥15,000）'
+    id: 'sharp_heater', label: 'SHARPヒーター式', price: 25000, priceLabel: '¥25,000', duration: '3時間',
+    info: '✓ 基本分解清掃\n✗ ドラム槽抜き洗浄なし（オプション¥15,000）\n✗ 乾燥機洗浄なし（オプション¥15,000）\n※ 2つ合わせて+¥20,000（合計¥45,000）'
   },
   {
     id: 'sharp_heatpump', label: 'SHARPヒートポンプ式', price: 30000, priceLabel: '¥30,000', duration: '4時間',
-    info: '✓ 基本分解清掃\n✓ 一部機種のみドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）'
+    info: '✓ 基本分解清掃\n✓ 一部機種のみドラム槽抜き洗浄込み\n✗ 乾燥機洗浄なし（オプション¥15,000）\n※ 分解してドラムがきれいな場合、ドラム槽抜きを無しにすると −¥5,000'
   },
 ];
 
@@ -2387,6 +2391,19 @@ function renderOptions() {
         return;
       }
 
+      // 当日オプションを判断したい
+      if (o.decideLater) {
+        html += '<div class="option-item' + selClass + '" id="opt_' + o.id + '" onclick="toggleOption(\'' + o.id + '\')" style="border-color:' + (isSelected ? '#3FB36B' : '#A8D5B8') + ';background:' + (isSelected ? '#E8F8EF' : '#F5FBF7') + ';">';
+        html += '<div class="option-checkbox' + selClass + '" id="chk_' + o.id + '" style="' + (isSelected ? 'background:#3FB36B;border-color:#3FB36B;' : 'border-color:#A8D5B8;') + '">' + (isSelected ? '✓' : '') + '</div>';
+        html += '<div class="option-info" style="width:100%;">';
+        html += '<div class="option-name" style="color:#2E7D52;">' + o.name + '</div>';
+        html += '<div class="option-desc">' + desc + '</div>';
+        html += '</div>';
+        html += '<div class="option-price" style="color:#2E7D52;white-space:nowrap;">' + o.price + '</div>';
+        html += '</div>';
+        return;
+      }
+
       // 通常オプション（メーカー選択あり・なし）
       html += '<div class="option-item' + selClass + '" id="opt_' + o.id + '" onclick="toggleOption(\'' + o.id + '\')">';
       html += '<div class="option-checkbox' + selClass + '" id="chk_' + o.id + '">' + (isSelected ? '✓' : '') + '</div>';
@@ -2571,6 +2588,7 @@ function renderConfirm() {
       if (!o) return null;
       const maker = makerSels[id];
       if (maker) return `${o.name}（${maker.label}・${maker.price}）`;
+      if (o.decideLater) return o.name;
       if (o.isSpecial || o.isNote) return `${o.name}（${o.price}）`;
       const n = getOptionPriceNum(o, selectedIds);
       return `${o.name}（${n === 0 ? '無料' : '+¥' + n.toLocaleString()}）`;
