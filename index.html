@@ -1314,7 +1314,7 @@
     <div class="field-group">
       <label>ご住所 <span class="required">必須</span></label>
       <input type="text" id="address" placeholder="例：東京都渋谷区〇〇1-2-3 〇〇マンション101号" />
-      <div class="hint" style="margin-top:8px;">※出張費は高津区役所からの距離（Googleマップの下道ルート）で判定します。30km以内は無料、31〜50kmは+¥3,000、51〜80kmは+¥5,000、それ以上は要相談となります</div>
+      <div class="hint" style="margin-top:8px;">※出張費は高津区役所からの距離で判定します。30km以内は無料、31〜50kmは+¥3,000、51〜80kmは+¥5,000、それ以上は要相談となります</div>
       <div class="error-msg" id="addressError">ご住所を入力してください</div>
     </div>
     <div class="field-group">
@@ -2609,7 +2609,7 @@ function renderConfirm() {
       <div class="price-row total"><div>合計金額（目安）</div><div>¥${total.toLocaleString()}</div></div>
       <div class="price-note-box">
         ※ 現場の汚れ状況により、当日追加オプションをご提案する場合があります（その場合は事前にご説明します）<br>
-        ※ 高津区役所から下道で30km超の場合、別途出張費（¥3,000〜）が加算されます<br>
+        ※ 高津区役所から30km超の場合、別途出張費（¥3,000〜）が加算されます<br>
         ※ 紹介者割は内容確認のうえ別途ご案内します${state.referrerName ? `（紹介者：${state.referrerName}）` : ''}
       </div>
     </div>
